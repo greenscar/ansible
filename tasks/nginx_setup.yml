@@ -1,0 +1,4 @@
+- hosts: nginx
+  tasks:
+    - include: ../roles/nginx/tasks/main.yml
+    

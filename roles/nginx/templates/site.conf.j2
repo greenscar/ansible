@@ -1,0 +1,14 @@
+server {
+  listen                *:8080;
+  server_name           {{ inventory_hostname }};
+
+  index  index.htm;
+
+  access_log            /var/log/nginx/{{inventory_hostname}}_access.log;
+  error_log             /var/log/nginx/{{inventory_hostname}}_error.log;
+
+  location / {
+    root      /var/www/{{inventory_hostname}};
+  }
+}
+

@@ -1,0 +1,49 @@
+---
+  
+  - name: Install nginx
+    sudo: yes
+    yum: name=nginx state=latest
+    
+  - name: Configure site 
+    template: src="site.conf.j2"
+      dest="/etc/nginx/conf.d/{{inventory_hostname}}.conf"
+      mode=644
+      owner=nginx
+      group=nginx
+    sudo: yes
+    
+  ###
+  # Open ports.
+  ###
+  
+  - name: Open the correct IPTables ports
+    lineinfile: dest=/etc/sysconfig/iptables
+                regexp="^-A INPUT -p {{item.protocol}} -m {{item.protocol}} --dport {{item.port}} -j ACCEPT$"
+                line="-A INPUT -p {{item.protocol}} -m {{item.protocol}} --dport {{item.port}} -j ACCEPT"
+                insertafter="^:OUTPUT ACCEPT \[\d*:\d*\]$"
+    with_items:
+      - { protocol: tcp, port: 8080 }
+      - { protocol: tcp, port: 22 }
+      - { protocol: udp, port: 53 }
+      - { protocol: udp, port: 123 }
+      - { protocol: udp, port: 161 }
+      - { protocol: udp, port: 162 }
+    sudo: yes
+  
+  - name: restart iptables
+    service: name=iptables state=restarted enabled=yes
+    sudo: yes
+  ###
+  # END Open ports.
+  ###
+  
+  - name: mkdir www server dir
+    file: path=/var/www/{{inventory_hostname}} recurse=yes owner=nginx group=nginx 
+
+  - name: Transfer index.htm
+    copy: src=../files/index.htm dest=/var/www/{{inventory_hostname}}/index.htm
+    sudo: yes
+
+  - name: Restart nginx
+    service: name=nginx state=restarted enabled=yes
+    sudo: yes
