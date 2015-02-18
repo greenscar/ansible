@@ -1,5 +1,10 @@
 ---
-  
+    
+  # Install required library for Ansible
+  - name: Install libselinux-python
+    sudo: yes
+    yum: name=libselinux-python state=latest
+    
   - name: Install nginx
     sudo: yes
     yum: name=nginx state=latest
@@ -15,7 +20,6 @@
   ###
   # Open ports.
   ###
-  
   - name: Open the correct IPTables ports
     lineinfile: dest=/etc/sysconfig/iptables
                 regexp="^-A INPUT -p {{item.protocol}} -m {{item.protocol}} --dport {{item.port}} -j ACCEPT$"
@@ -38,7 +42,8 @@
   ###
   
   - name: mkdir www server dir
-    file: path=/var/www/{{inventory_hostname}} recurse=yes owner=nginx group=nginx 
+    file: path=/var/www/{{inventory_hostname}} recurse=yes owner=nginx group=nginx state=directory
+    sudo: yes
 
   - name: Transfer index.htm
     copy: src=../files/index.htm dest=/var/www/{{inventory_hostname}}/index.htm
