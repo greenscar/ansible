@@ -1,4 +1,6 @@
 - hosts: nginx
+  vars:
+    - port_num: 8080
   tasks:
     - include: ../roles/nginx/tasks/main.yml
     

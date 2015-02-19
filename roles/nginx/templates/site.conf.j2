@@ -1,5 +1,5 @@
 server {
-  listen                *:8080;
+  listen                *:{{ port_num }};
   server_name           {{ inventory_hostname }};
 
   index  index.htm;

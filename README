@@ -1,0 +1,30 @@
+#########################################
+# Purpose: nginx install via Ansible
+# Author: James Sandlin
+# Date: 2015-01-19
+# Contact: james@sandlininc.com
+# Comments: - Ansible is not designed to be a single script for all distros. Scripts are written 
+#             for a specific OS. Therefore, this script is written for CentOS 6.
+#           - If you already have a /var/www/<servername> webserver operating, your
+#             index.htm will be replaced.
+#           - You can change port number from 8080 by modifying nginx_setup.yml's port_num variable.
+######################################### 
+
+-= INITIAL SETUP REQUIRED =-
+1) CentOS 6 base system setup with internet access.
+2) <username> must have passwordless sudo on the destination server.
+   Edit /etc/sudoers and add:
+      <username>     ALL=(ALL)      NOPASSWD: ALL
+3) ssh <username>@<server> and accept the server to your known_hosts
+4) Add your <server> to the env file under the nginx role.
+   Edit ${WORKSPACE}/envs/nginx
+   Replace devops with your server. 
+   Add as many servers as you would like, one per line.
+   
+-= RUN ANSIBLE =-
+Call ansible-playbook -i envs/nginx tasks/nginx_setup.yml -u <username>
+
+-= ACCESS WEBSITE =-
+http://<server>:<port num>
+
+

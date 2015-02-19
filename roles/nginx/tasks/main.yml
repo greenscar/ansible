@@ -13,12 +13,10 @@
     template: src="site.conf.j2"
       dest="/etc/nginx/conf.d/{{inventory_hostname}}.conf"
       mode=644
-      owner=nginx
-      group=nginx
     sudo: yes
     
   ###
-  # Open ports.
+  # Open port.
   ###
   - name: Open the correct IPTables ports
     lineinfile: dest=/etc/sysconfig/iptables
@@ -26,19 +24,14 @@
                 line="-A INPUT -p {{item.protocol}} -m {{item.protocol}} --dport {{item.port}} -j ACCEPT"
                 insertafter="^:OUTPUT ACCEPT \[\d*:\d*\]$"
     with_items:
-      - { protocol: tcp, port: 8080 }
-      - { protocol: tcp, port: 22 }
-      - { protocol: udp, port: 53 }
-      - { protocol: udp, port: 123 }
-      - { protocol: udp, port: 161 }
-      - { protocol: udp, port: 162 }
+      - { protocol: tcp, port: "{{ port_num }}" }
     sudo: yes
   
   - name: restart iptables
     service: name=iptables state=restarted enabled=yes
     sudo: yes
   ###
-  # END Open ports.
+  # END Open port.
   ###
   
   - name: mkdir www server dir
@@ -52,3 +45,5 @@
   - name: Restart nginx
     service: name=nginx state=restarted enabled=yes
     sudo: yes
+    
+  - debug: msg="curl http://{{ inventory_hostname }}:{{ port_num }}"
