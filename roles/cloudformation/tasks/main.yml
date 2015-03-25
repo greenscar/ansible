@@ -30,7 +30,7 @@
     state: "present"
     region: "{{region}}"
     disable_rollback: true
-    template: "../templates/WordPress_Single_Instance_With_RDS.json"
+    template: "../templates/{{template_name}}"
     template_parameters:
       KeyName: "{{key_name}}"
       InstanceType: "{{instance_size}}"
