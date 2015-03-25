@@ -1,0 +1,38 @@
+
+
+- debug: msg="test"
+  
+- name: shell
+  shell: python --version
+  
+- name: test script
+  script: ../../../exit.py
+  
+- name: launch ansible cloudformation c
+  cloudformation:
+    stack_name: "ansible-cloudformation"
+    state: "present"
+    region: "us-east-1"
+    disable_rollback: true
+    template: "files/cloudformation-example.json"
+    template_parameters:
+      KeyName: "jmartin"
+      DiskType: "ephemeral"
+      InstanceType: "m1.small"
+      ClusterSize: 3
+    tags:
+      Stack: "ansible-cloudformation"
+      
+      
+- name: launch ansible cloudformation example
+  cloudformation:
+    stack_name: "{{stack_name}}"
+    state: "present"
+    region: "{{region}}"
+    disable_rollback: true
+    template: "../templates/WordPress_Single_Instance_With_RDS.json"
+    template_parameters:
+      KeyName: "{{key_name}}"
+      InstanceType: "{{instance_size}}"
+    tags:
+      Stack: "ansible-cloudformation"
