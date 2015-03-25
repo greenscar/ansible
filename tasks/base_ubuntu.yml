@@ -1,0 +1,12 @@
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+    - stack_name: "ansible-cloudformation"
+    - region: "us-west-1"
+    - key_name: "key_pair_oregon"
+    - instance_size: "t1.micro"
+    - template_name: "Single_Ubuntu.json" #"WordPress_Single_Instance_With_RDS.json"
+  tasks:
+    - include: ../roles/cloudformation/tasks/main.yml
+    
