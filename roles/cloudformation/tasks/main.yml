@@ -30,7 +30,7 @@
     state: "present"
     region: "{{region}}"
     disable_rollback: true
-    template: "../templates/{{template_name}}"
+    template: "../roles/cloudformation/templates/{{template_name}}"
     template_parameters:
       KeyName: "{{key_name}}"
       InstanceType: "{{instance_size}}"
