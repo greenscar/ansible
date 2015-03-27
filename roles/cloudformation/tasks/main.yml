@@ -1,29 +1,4 @@
-
-
-- debug: msg="test"
-  
-- name: shell
-  shell: python --version
-  
-- name: test script
-  script: ../../../exit.py
-  
-#- name: launch ansible cloudformation c
-#  cloudformation:
-#    stack_name: "ansible-cloudformation"
-#    state: "present"
-#    region: "us-east-1"
-#    disable_rollback: true
-#    template: "files/cloudformation-example.json"
-#    template_parameters:
-#      KeyName: "jmartin"
-#      DiskType: "ephemeral"
-#      InstanceType: "m1.small"
-#      ClusterSize: 3
-#    tags:
-#      Stack: "ansible-cloudformation"
-      
-      
+# http://docs.ansible.com/cloudformation_module.html
 - name: launch ansible cloudformation example
   cloudformation:
     stack_name: "{{stack_name}}"
@@ -34,5 +9,25 @@
     template_parameters:
       KeyName: "{{key_name}}"
       InstanceType: "{{instance_size}}"
-    tags:
-      Stack: "ansible-cloudformation"
+  tags:
+    - tags: [ create ]
+#      Stack: "ansible-cloudformation"
+
+- name: Report AWS Cloudformation usage
+  shell: "../hosts/ec2.py"
+  register: ec2_report
+  tags:
+    - tags: [ report ]
+- debug: ec2_report
+  tags:
+    - tags: [ report ]
+
+# https://github.com/jimi-c/ansible_cloudformation_example/blob/master/destroy_datacenter.yml
+- name: Destroy AWS CloudFormation 
+  cloudformation:
+    stack_name: "{{stack_name}}"
+    state: "absent"
+    region: "{{region}}"
+    template: "../roles/cloudformation/templates/{{template_name}}"
+  tags: [ delete ]
+    

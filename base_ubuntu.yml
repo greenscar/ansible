@@ -1,0 +1,17 @@
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+#    workspace: "{{ lookup('env', 'WORKSPACE') }}"
+    - stack_name: "base-ubuntu"
+    - region: "us-west-2"
+    - key_name: "key_pair_oregon"
+    - instance_size: "t1.micro"
+    - template_name: "Single_Ubuntu.json"
+  roles:
+    - { role: cloudformation, tags: ['create'] }
+    - { role: cloudformation, tags: ['report'] }
+    - { role: cloudformation, tags: ['delete'] }
+#  tasks:
+#    - include: ../roles/cloudformation/tasks/main.yml
+    
