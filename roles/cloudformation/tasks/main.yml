@@ -1,33 +1,13 @@
-# http://docs.ansible.com/cloudformation_module.html
-- name: launch ansible cloudformation example
-  cloudformation:
-    stack_name: "{{stack_name}}"
-    state: "present"
-    region: "{{region}}"
-    disable_rollback: true
-    template: "../roles/cloudformation/templates/{{template_name}}"
-    template_parameters:
-      KeyName: "{{key_name}}"
-      InstanceType: "{{instance_size}}"
-  tags:
-    - tags: [ create ]
-#      Stack: "ansible-cloudformation"
 
-- name: Report AWS Cloudformation usage
-  shell: "../hosts/ec2.py"
-  register: ec2_report
-  tags:
-    - tags: [ report ]
-- debug: ec2_report
-  tags:
-    - tags: [ report ]
+- include: stack_destroy.yml
+  tags: [destroy]
+    
+- include: stack_create.yml
+  tags: [create]
 
-# https://github.com/jimi-c/ansible_cloudformation_example/blob/master/destroy_datacenter.yml
-- name: Destroy AWS CloudFormation 
-  cloudformation:
-    stack_name: "{{stack_name}}"
-    state: "absent"
-    region: "{{region}}"
-    template: "../roles/cloudformation/templates/{{template_name}}"
-  tags: [ delete ]
+- include: stack_report.yml
+  tags: [report]
+
+- include: stack_destroy.yml
+  tags: [delete]
     

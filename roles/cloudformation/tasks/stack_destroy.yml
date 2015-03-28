@@ -1,0 +1,7 @@
+# https://github.com/jimi-c/ansible_cloudformation_example/blob/master/destroy_datacenter.yml
+- name: Destroy AWS CloudFormation 
+  cloudformation:
+    stack_name: "{{stack_name}}"
+    state: "absent"
+    region: "{{region}}"
+    template: "roles/cloudformation/templates/{{template_name}}"

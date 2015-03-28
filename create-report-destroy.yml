@@ -9,8 +9,7 @@
     - instance_size: "t1.micro"
     - template_name: "Single_Ubuntu.json"
   roles:
-    - cloudformation
-#    - { role: cloudformation, tags: ['create'] }
+    - { role: cloudformation }
 #    - { role: cloudformation, tags: ['report'] }
 #    - { role: cloudformation, tags: ['delete'] }
 
