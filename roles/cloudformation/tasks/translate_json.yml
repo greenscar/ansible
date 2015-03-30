@@ -3,6 +3,6 @@
 
 - debug: msg={{stdout}}
 
-- debug: msg={{stdout.hostvars}}
+- debug: msg={{stdout._meta.hostvars}}
 
 - debug: msg={{stdout.type_t1_micro}}
