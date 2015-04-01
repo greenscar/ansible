@@ -1,12 +1,20 @@
 # http://docs.ansible.com/cloudformation_module.html
+- debug: msg="vpcid = {{vpcid}}"
 - name: Create AWS Cloudformation
   cloudformation:
-    stack_name: "{{stack_name}}"
+    stack_name: "jamess-elasticsearch"
     state: "present"
-    region: "{{region}}"
+    region: "us-east-1"
     disable_rollback: true
-    template: "roles/cloudformation/templates/{{template_name}}"
+    template: "roles/cloudformation/templates/cloudcruiser-elasticsearch.json"
     template_parameters:
-      KeyName: "{{key_name}}"
-      InstanceType: "{{instance_size}}"
+#      KeyPairName: "jamess"
+      KeyPairName: "bravo-infra"
+      InstanceType: "m1.medium"
+#      InstanceType: "m3.medium"
+      AvailabilityZone1: "us-east-1a"
+      AvailabilityZone2: "us-east-1d"
+      ServiceSubnet1: "{{private_subnet_1}}"
+      ServiceSubnet2: "{{private_subnet_2}}"
+      VPC: "{{vpcid}}"
   register: cloud_info

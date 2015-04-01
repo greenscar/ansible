@@ -1,0 +1,519 @@
+{
+    "Mappings": {
+        "AWSInstanceType2Arch": {
+            "c1.medium": {
+                "Arch": "PV64"
+            },
+            "c3.large": {
+                "Arch": "HVM64"
+            },
+            "m1.large": {
+                "Arch": "PV64"
+            },
+            "m1.medium": {
+                "Arch": "PV64"
+            },
+            "m1.small": {
+                "Arch": "PV64"
+            },
+            "m3.large": {
+                "Arch": "HVM64"
+            },
+            "m3.medium": {
+                "Arch": "HVM64"
+            },
+            "r3.large": {
+                "Arch": "HVM64"
+            },
+            "t1.micro": {
+                "Arch": "PV64"
+            },
+            "t2.medium": {
+                "Arch": "HVM64"
+            },
+            "t2.micro": {
+                "Arch": "HVM64"
+            },
+            "t2.small": {
+                "Arch": "HVM64"
+            }
+        },
+        "AWSRegionArch2AMI": {
+            "ap-northeast-1": {
+                "HVM64": "ami-18869819",
+                "PV64": "ami-3c87993d"
+            },
+            "ap-southeast-1": {
+                "HVM64": "ami-d50773ef",
+                "PV64": "ami-1500742f"
+            },
+            "cn-north-1": {
+                "HVM64": "ami-981d8fa1",
+                "PV64": "ami-8a1d8fb3"
+            },
+            "eu-central-1": {
+                "HVM64": "ami-04003319",
+                "PV64": "ami-0600331b"
+            },
+            "eu-west-1": {
+                "HVM64": "ami-9d23aeea",
+                "PV64": "ami-7b3db00c"
+            },
+            "sa-east-1": {
+                "HVM64": "ami-af9925b2",
+                "PV64": "ami-fd9925e0"
+            },
+            "us-east-1": {
+                "HVM64": "ami-146e2a7c",
+                "PV64": "ami-8e682ce6"
+            },
+            "us-west-1": {
+                "HVM64": "ami-42908907",
+                "PV64": "ami-f49089b1"
+            },
+            "us-west-2": {
+                "HVM64": "ami-dfc39aef",
+                "PV64": "ami-9fc29baf"
+            }
+        },
+        "ElasticsearchVersion2AWSCloudPluginVersion": {
+            "1.4.2": {
+                "Ver": "2.4.1"
+            }
+        },
+        "ElasticsearchVersion2ServiceWrapperHash": {
+            "1.4.2": {
+                "Hash": "4943d5a"
+            }
+        }
+    },
+    "Parameters": {
+        "AvailabilityZone1": {
+            "AllowedPattern": "[\\x20-\\x7E]*",
+            "ConstraintDescription": "Can contain only ASCII characters.",
+            "Description": "The first of two AZs",
+            "MaxLength": "255",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "AvailabilityZone2": {
+            "AllowedPattern": "[\\x20-\\x7E]*",
+            "ConstraintDescription": "Can contain only ASCII characters.",
+            "Description": "The second of two AZs",
+            "MaxLength": "255",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "ClusterSize": {
+            "Default": "1",
+            "Description": "The size of the elasticsearch cluster",
+            "Type": "Number"
+        },
+        "ElasticsearchVersion": {
+            "AllowedValues": [
+                "1.4.2"
+            ],
+            "ConstraintDescription": "Must be a supported version number.",
+            "Default": "1.4.2",
+            "Description": "The version of elasticsearch to deploy",
+            "Type": "String"
+        },
+        "InstanceType": {
+            "AllowedValues": [
+                "t1.micro",
+                "m1.small",
+                "m1.medium",
+                "m1.large",
+                "m1.xlarge",
+                "m2.xlarge",
+                "m2.2xlarge",
+                "m2.4xlarge",
+                "m3.xlarge",
+                "m3.2xlarge",
+                "c1.medium",
+                "c1.xlarge",
+                "cc1.4xlarge",
+                "cc2.8xlarge",
+                "cg1.4xlarge"
+            ],
+            "ConstraintDescription": "must be a valid EC2 instance type.",
+            "Default": "m1.small",
+            "Description": "Elasticsearch EC2 instance type",
+            "Type": "String"
+        },
+        "KeyPairName": {
+            "AllowedPattern": "[\\x20-\\x7E]*",
+            "ConstraintDescription": "Can contain only ASCII characters.",
+            "Description": "Name of an existing EC2 KeyPair to enable SSH access to the service instances",
+            "MaxLength": "255",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "ServiceSubnet1": {
+            "AllowedPattern": "[\\x20-\\x7E]*",
+            "ConstraintDescription": "Can contain only ASCII characters.",
+            "Description": "Subnet1 for the elasticsearch cluster",
+            "MaxLength": "255",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "ServiceSubnet2": {
+            "AllowedPattern": "[\\x20-\\x7E]*",
+            "ConstraintDescription": "Can contain only ASCII characters.",
+            "Description": "Subnet2 for the elasticsearch cluster",
+            "MaxLength": "255",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "VPC": {
+            "AllowedPattern": "[\\x20-\\x7E]*",
+            "ConstraintDescription": "Can contain only ASCII characters.",
+            "Description": "VPC where the services are being provisioned",
+            "MaxLength": "255",
+            "MinLength": "1",
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "ElasticSearchServer": {
+            "Metadata": {
+                "AWS::CloudFormation::Init": {
+                    "config": {
+                        "commands": {
+                            "createfile": {
+                                "command": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "echo \"",
+                                            "cloud.aws.region:\n",
+                                            " ",
+                                            {
+                                                "Ref": "AWS::Region"
+                                            },
+                                            "\n",
+                                            "discovery.type: ec2\n",
+                                            "\n",
+                                            "discovery.zen.ping.multicast.enabled: false\n",
+                                            "\n",
+                                            "cluster.name:FOOBAR\n",
+                                            "\n",
+                                            "plugin.mandatory: cloud-aws\n",
+                                            "\n",
+                                            "cloud.aws.access_key: NOTMYACCESSKEYATALL\n",
+                                            "\n",
+                                            "cloud.aws.secret_key: ITw0UlDnTB3seCRetiFiPuTItHeR3\n",
+                                            "\n",
+                                            "discovery.ec2.groups: ",
+                                            {
+                                                "Ref": "ElasticsearchSecurityGroup"
+                                            },
+                                            "\n",
+                                            "discovery.ec2.tag.type: elasticsearch\n",
+                                            "\n",
+                                            "cloud.node.auto_attributes: true\n",
+                                            " \" > ",
+                                            "/usr/local/elasticsearch/elasticsearch-",
+                                            {
+                                                "Ref": "ElasticsearchVersion"
+                                            },
+                                            "/config/elasticsearch.yml"
+                                        ]
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "Properties": {
+                "AssociatePublicIpAddress": "true",
+                "IamInstanceProfile": {
+                    "Ref": "ElasticsearchInstanceProfile"
+                },
+                "ImageId": {
+                    "Fn::FindInMap": [
+                        "AWSRegionArch2AMI",
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        {
+                            "Fn::FindInMap": [
+                                "AWSInstanceType2Arch",
+                                {
+                                    "Ref": "InstanceType"
+                                },
+                                "Arch"
+                            ]
+                        }
+                    ]
+                },
+                "InstanceType": {
+                    "Ref": "InstanceType"
+                },
+                "KeyName": {
+                    "Ref": "KeyPairName"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "ElasticsearchSecurityGroup"
+                    }
+                ],
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "#!/bin/bash\n",
+                                "yum update -y aws-cfn-bootstrap\n",
+                                "# Helper function\n",
+                                "function error_exit\n",
+                                "{\n",
+                                "  /opt/aws/bin/cfn-signal -e 1 \n",
+                                "  exit 1\n",
+                                "}\n",
+                                "# Install application\n",
+                                "#/opt/aws/bin/cfn-init -s ",
+                                {
+                                    "Ref": "AWS::StackId"
+                                },
+                                " -r ElasticsearchServer ",
+                                "#    --region ",
+                                {
+                                    "Ref": "AWS::Region"
+                                },
+                                "\n",
+                                "#get and unzip elasticsearch\n",
+                                "wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-",
+                                {
+                                    "Ref": "ElasticsearchVersion"
+                                },
+                                ".zip || error_exit \"Failed to retrieve elasticsearch archive\"\n",
+                                "unzip elasticsearch-",
+                                {
+                                    "Ref": "ElasticsearchVersion"
+                                },
+                                ".zip -d /usr/local/elasticsearch\n",
+                                "#install aws plugin\n",
+                                "cd /usr/local/elasticsearch/elasticsearch-",
+                                {
+                                    "Ref": "ElasticsearchVersion"
+                                },
+                                "\n",
+                                "res=$(bin/plugin -install org.elasticsearch/elasticsearch-cloud-aws/",
+                                {
+                                    "Fn::FindInMap": [
+                                        "ElasticsearchVersion2AWSCloudPluginVersion",
+                                        {
+                                            "Ref": "ElasticsearchVersion"
+                                        },
+                                        "Ver"
+                                    ]
+                                },
+                                ")\n",
+                                "if [ \"$?\" -ne \"0\" ]; then\n",
+                                "   error_exit \"Failed to install aws plugin: ${res}\"\n",
+                                "fi\n",
+                                "# Install elasticsearch config.yml\n",
+                                "/opt/aws/bin/cfn-init -s ",
+                                {
+                                    "Ref": "AWS::StackId"
+                                },
+                                " -r ElasticsearchServer ",
+                                "    --region ",
+                                {
+                                    "Ref": "AWS::Region"
+                                },
+                                "|| error_exit \"failed to run cfn-init\"\n",
+                                "#install elasticsearch servicewrapper daemon\n",
+                                "cd ~\n",
+                                "wget https://github.com/elasticsearch/elasticsearch-servicewrapper/zipball/",
+                                {
+                                    "Fn::FindInMap": [
+                                        "ElasticsearchVersion2ServiceWrapperHash",
+                                        {
+                                            "Ref": "ElasticsearchVersion"
+                                        },
+                                        "Hash"
+                                    ]
+                                },
+                                "\n",
+                                "unzip ",
+                                {
+                                    "Fn::FindInMap": [
+                                        "ElasticsearchVersion2ServiceWrapperHash",
+                                        {
+                                            "Ref": "ElasticsearchVersion"
+                                        },
+                                        "Hash"
+                                    ]
+                                },
+                                "\n",
+                                "mv elasticsearch-elasticsearch-servicewrapper-",
+                                {
+                                    "Fn::FindInMap": [
+                                        "ElasticsearchVersion2ServiceWrapperHash",
+                                        {
+                                            "Ref": "ElasticsearchVersion"
+                                        },
+                                        "Hash"
+                                    ]
+                                },
+                                "/service/ /usr/local/elasticsearch/elasticsearch-",
+                                {
+                                    "Ref": "ElasticsearchVersion"
+                                },
+                                "/bin/\n",
+                                "cd /usr/local/elasticsearch/elasticsearch-",
+                                {
+                                    "Ref": "ElasticsearchVersion"
+                                },
+                                "\n",
+                                "sed -i 's#set.default.ES_HOME=.*#set.default.ES_HOME='$PWD'#g' bin/service/elasticsearch.conf\n",
+                                "#changing default heap size for smaller instances\n",
+                                "sed -i 's#set.default.ES_HEAP_SIZE=.*#set.default.ES_HEAP_SIZE=512#g' bin/service/elasticsearch.conf\n",
+                                "bin/service/elasticsearch64 install || error_exit \"Failed install elasticsearch daemon\"\n",
+                                "res=$(bin/service/elasticsearch64 start)\n",
+                                "if [ \"$?\" -ne \"0\" ]; then\n",
+                                "   error_exit \"Failed to start elasticsearch servicewrapper: ${res}\"\n",
+                                "fi\n",
+                                "# All is well so signal success\n",
+                                "/opt/aws/bin/cfn-signal -e 0 --stack ",
+                                {
+                                    "Ref": "AWS::StackName"
+                                },
+                                " --resource ElasticsearchASG\n"
+                            ]
+                        ]
+                    }
+                }
+            },
+            "Type": "AWS::AutoScaling::LaunchConfiguration"
+        },
+        "ElasticsearchASG": {
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Count": 1,
+                    "Timeout": "PT15M"
+                }
+            },
+            "Properties": {
+                "AvailabilityZones": [
+                    {
+                        "Ref": "AvailabilityZone1"
+                    },
+                    {
+                        "Ref": "AvailabilityZone2"
+                    }
+                ],
+                "DesiredCapacity": {
+                    "Ref": "ClusterSize"
+                },
+                "LaunchConfigurationName": {
+                    "Ref": "ElasticSearchServer"
+                },
+                "MaxSize": "1",
+                "MinSize": "1",
+                "Tags": [
+                    {
+                        "Key": "type",
+                        "PropagateAtLaunch": "true",
+                        "Value": "elasticsearch"
+                    }
+                ],
+                "VPCZoneIdentifier": [
+                    {
+                        "Ref": "ServiceSubnet1"
+                    },
+                    {
+                        "Ref": "ServiceSubnet2"
+                    }
+                ]
+            },
+            "Type": "AWS::AutoScaling::AutoScalingGroup"
+        },
+        "ElasticsearchDiscoveryRole": {
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "ec2.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Path": "/"
+            },
+            "Type": "AWS::IAM::Role"
+        },
+        "ElasticsearchInstanceProfile": {
+            "Properties": {
+                "Path": "/",
+                "Roles": [
+                    {
+                        "Ref": "ElasticsearchDiscoveryRole"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::InstanceProfile"
+        },
+        "ElasticsearchRolePolicies": {
+            "Properties": {
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "ec2:*"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": "*"
+                        }
+                    ]
+                },
+                "PolicyName": "esdiscovery",
+                "Roles": [
+                    {
+                        "Ref": "ElasticsearchDiscoveryRole"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Policy"
+        },
+        "ElasticsearchSecurityGroup": {
+            "Properties": {
+                "GroupDescription": "Security group used for the elasticsearch cluster",
+                "SecurityGroupIngress": [
+                    {
+                        "CidrIp": "0.0.0.0/0",
+                        "FromPort": "9200",
+                        "IpProtocol": "tcp",
+                        "ToPort": "9200"
+                    },
+                    {
+                        "CidrIp": "0.0.0.0/0",
+                        "FromPort": "9300",
+                        "IpProtocol": "tcp",
+                        "ToPort": "9300"
+                    },
+                    {
+                        "CidrIp": "0.0.0.0/0",
+                        "FromPort": "22",
+                        "IpProtocol": "tcp",
+                        "ToPort": "22"
+                    }
+                ],
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::SecurityGroup"
+        }
+    }
+}

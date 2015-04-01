@@ -1,6 +1,6 @@
 
-- include: translate_json.yml
-  tags: [test]
+#- include: translate_json.yml
+#  tags: [test]
   
 - include: stack_destroy.yml
   tags: [destroy]

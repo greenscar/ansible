@@ -1,0 +1,12 @@
+- name: create elb
+  ec2_elb_lb:
+    name: "{{ elb_name }}"
+    state: absent
+#    region: "{{region}}"
+#    zones:
+#      - us-west-1
+#      - us-west-2
+#    listeners:
+#      - protocol: http # options are http, https, ssl, tcp
+#        load_balancer_port: 80
+#        instance_port: 80
