@@ -1,0 +1,5 @@
+if [ `netstat -lnt | awk '$6 == "LISTEN" && $4 ~ ".9300"' | wc -l` -lt 1 ]; then
+logger "!!!!!!!!!FAILURE!!!!!!!!!"
+else
+logger "!!!!!!!!!SUCCESS!!!!!!!!!"
+fi

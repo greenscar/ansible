@@ -2,7 +2,7 @@
 - debug: msg={{ cloud_info }}
 
 # The public URL of the site.
-- debug: msg={{ cloud_info.stack_outputs.WebsiteURL}}
+#- debug: msg={{ cloud_info.stack_outputs.WebsiteURL}}
 
 - name: Report AWS Cloudformation usage
   shell: "hosts/ec2.py --list"

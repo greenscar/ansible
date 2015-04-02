@@ -10,7 +10,3 @@
 
 - include: stack_report.yml
   tags: [report]
-
-- include: stack_destroy.yml
-  tags: [delete]
-    
