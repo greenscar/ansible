@@ -281,14 +281,12 @@
                         "Key": "type",
                         "PropagateAtLaunch": "true",
                         "Value": "elasticsearch"
+                    },
+                    {
+                        "Key": "Name",
+                        "PropagateAtLaunch": "true",
+                        "Value": "ElasticSearch"
                     }
-                ],
-                "Tags" : [
-                     {
-                         "Key" : "Name",
-                         "Value" : "ElasticSearch",
-                         "PropagateAtLaunch" : "true"
-                     }
                 ],
                 "VPCZoneIdentifier": [
                     {
@@ -406,7 +404,6 @@
                                             "discovery.ec2.tag.type: elasticsearch\n",
                                             "\n",
                                             "path.logs: /var/log/elasticsearch\n",
-                                            "\n",
                                             "\ncluster.name: ",
                                             {
                                                 "Ref": "ElasticSearchClusterName"
@@ -558,7 +555,6 @@
                                     ]
                                 },
                                 "\n",
-                                "logger \"BEFORE MV\"\n",
                                 "mv -f ~/elastic-elasticsearch-servicewrapper-",
                                 {
                                     "Fn::FindInMap": [
@@ -578,10 +574,7 @@
                                 {
                                     "Ref": "ElasticSearchVersion"
                                 },
-                   
-                                
                                 "\n",
-                                "logger \"BEFORE SED\"\n",
                                 "sed -i 's|set.default.ES_HOME=.*|set.default.ES_HOME='$PWD'|g' bin/service/elasticsearch.conf\n",
                                 "#changing default heap size for smaller instances\n",
                                 "sed -i 's|set.default.ES_HEAP_SIZE=.*|set.default.ES_HEAP_SIZE=512|g' bin/service/elasticsearch.conf\n",
@@ -601,16 +594,13 @@
                                 {
                                     "Ref": "AWS::StackName"
                                 },
-                                " --resource ElasticSearchASG\n",
-                                "\n"
+                                " --resource ElasticSearchASG\n"
                             ]
                         ]
                     }
                 }
             },
-            
             "Type": "AWS::AutoScaling::LaunchConfiguration"
-        }         
-                
+        }
     }
 }
