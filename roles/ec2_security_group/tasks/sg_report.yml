@@ -1,0 +1,38 @@
+- name: Report ec2_cloudformation_results data
+  debug: msg={{ec2_cloudformation_results}}
+  
+- name: Report security_group
+  debug: msg="{{security_group}}"
+  
+- name: Report security_group.name
+  debug: msg="{{security_group.name}}"
+  
+- name: Report security_group.rules
+  debug: msg="{{security_group.rules}}"
+  
+- name: report security_group.rules.ingress
+  debug: msg="{{security_group.rules}}"
+
+
+- name: Report security_group.rules with_dict
+  debug: msg="{{item}}"
+  with_items: "{{security_group['rules']}}"
+  
+- name: REPORT INGRESS RULES
+  debug: msg="{{ item.cidr_ip }} - {{ item.from_port }} - {{ item.proto }} - {{ item.dest_port }} "
+  when: item.type == "ingress"
+  with_items: "{{security_group.rules}}"
+  
+  
+- name: REPORT EGRESS RULES
+  debug: msg="{{ item.cidr_ip }} - {{ item.from_port }} - {{ item.proto }} - {{ item.dest_port }} "
+  when: item.type == "egress"
+  with_items: "{{security_group.rules}}"
+  
+
+  
+
+#debug: msg="XXXXXXXXXXX - {{ item.from_port}}"
+#  .rules.ingress
+#  when: item.from_port == "22"
+#  with_nested:

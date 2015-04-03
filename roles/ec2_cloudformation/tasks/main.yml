@@ -1,0 +1,2 @@
+- include: gather_data.yml
+  tags: [report]

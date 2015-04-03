@@ -1,0 +1,10 @@
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+    - region: "us-east-1"
+    - stack_name: "BravoInfrastructure-integration"
+  roles:
+    - {role: ec2_cloudformation, tags: ['create', 'report', 'destroy'] }
+    - {role: ec2_security_group, tags: ['report'] }
+

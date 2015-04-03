@@ -1,0 +1,14 @@
+
+- include: sg_destroy.yml
+  tags: 
+    - destroy
+
+- include: sg_report.yml
+  tags: 
+    - report
+  
+- include: sg_create.yml
+  tags: 
+    - create
+
+  

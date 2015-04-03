@@ -1,0 +1,5 @@
+- name: gather cloudformation data
+  cloudformation_info:
+    region: "{{ region }}"
+    stack_name: "{{ stack_name }}"
+  register: ec2_cloudformation_results

@@ -1,0 +1,9 @@
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+    - stack_name: "jamess-elasticsearch"
+    - region: "us-east-1"
+    - template_name: "cloudcruiser-elasticsearch.json"
+  roles:
+    - ec2_security_group
