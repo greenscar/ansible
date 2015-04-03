@@ -1,0 +1,41 @@
+security_group:
+   elasticsearch:
+      name: "elasticsearch"
+      description: "elasticsearch server"
+      rules:
+         ingress:
+         - cidr_ip: "0.0.0.0/0"
+           from_port: "9200"
+           proto: "tcp"
+           to_port: "9200"
+         - cidr_ip: "0.0.0.0/0"
+           from_port: "9300"
+           proto: "tcp"
+           to_port: "9300"
+         - cidr_ip: "0.0.0.0/0"
+           from_port: "22"
+           proto: "tcp"
+           to_port: "22"
+      rules_egress:
+         - type: "egress"
+           cidr_ip: "0.0.0.0/0"
+           from_port: "22"
+           proto: "tcp"
+           to_port: "22"
+   http:
+      name: "http"
+      description: "web server"
+      rules:
+         ingress:
+         - cidr_ip: "0.0.0.0/0"
+           from_port: "22"
+           proto: "tcp"
+           to_port: "22"
+         - cidr_ip: "0.0.0.0/0"
+           from_port: "80"
+           proto: "tcp"
+           to_port: "80"
+
+master:
+   region: "us-east-1"
+   stack_name: "BravoInfrastructure-integration"

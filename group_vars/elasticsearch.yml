@@ -1,0 +1,22 @@
+security_group:
+    name: "elasticsearch"
+    description: "elasticsearch server"
+    rules:
+       - cidr_ip: "0.0.0.0/0"
+         from_port: "9200"
+         proto: "tcp"
+         to_port: "9200"
+       - cidr_ip: "0.0.0.0/0"
+         from_port: "9300"
+         proto: "tcp"
+         to_port: "9300"
+       - cidr_ip: "0.0.0.0/0"
+         from_port: "22"
+         proto: "tcp"
+         to_port: "22"
+    rules_egress:
+       - type: "egress"
+         cidr_ip: "0.0.0.0/0"
+         from_port: "22"
+         proto: "tcp"
+         to_port: "22"

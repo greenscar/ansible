@@ -1,10 +1,12 @@
-#param={{condition|ternary('truval','falseval')}}
 - name: Create EC2 Security Group
   ec2_group:
     name: "{{security_group.name}}"
     description: "{{security_group.description}}"
     vpc_id: "{{ec2_cloudformation_results['VPCId']}}"
-    region: "{{ region }}"
-    rules: "{{security_group.rules.ingress}}"
+    region: "{{ master.region }}"
+    rules: "{{security_group.rules}}"
     rules_egress: "{{security_group.rules_egress}}"
+  tags: 
+    - create
+    - update
     

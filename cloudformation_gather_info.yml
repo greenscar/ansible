@@ -5,5 +5,5 @@
     - region: "us-east-1"
     - stack_name: "BravoInfrastructure-integration"
   roles:
-    - ec2_cloudformation
+    - { role: ec2_cloudformation, tags: ['report'] }
     

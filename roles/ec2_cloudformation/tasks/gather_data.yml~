@@ -3,5 +3,4 @@
     region: "{{ master.region }}"
     stack_name: "{{ master.stack_name }}"
   register: ec2_cloudformation_results 
-  tags: 
-    - report
+  tags: [report]

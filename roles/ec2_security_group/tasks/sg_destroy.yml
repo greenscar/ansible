@@ -1,8 +1,9 @@
-#param={{condition|ternary('truval','falseval')}}
 - name: Destroy EC2 Security Group
   ec2_group:
     name: "{{security_group.name}}"
     description: "{{security_group.description}}"
     vpc_id: "{{ec2_cloudformation_results['VPCId']}}"
-    region: "{{ region }}"
+    region: "{{ master.region }}"
     state: absent
+  tags: 
+    - destroy
