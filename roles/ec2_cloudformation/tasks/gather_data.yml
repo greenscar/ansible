@@ -4,4 +4,11 @@
     stack_name: "{{ master.stack_name }}"
   register: ec2_cloudformation_results 
   tags: 
+    - create
+    - report
+
+- name: debug
+  debug: msg="{{ec2_cloudformation_results}}"
+  tags: 
+    - create
     - report

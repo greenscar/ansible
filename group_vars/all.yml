@@ -2,3 +2,4 @@
 master:
    region: "us-east-1"
    stack_name: "BravoInfrastructure-integration"
+   keypair: "bravo-infra"

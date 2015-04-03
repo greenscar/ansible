@@ -1,0 +1,3 @@
+
+- include: ec2_create.yml
+- include: ec2_destroy.yml

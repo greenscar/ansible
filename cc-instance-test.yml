@@ -1,0 +1,9 @@
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  vars_files:
+    - ./group_vars/all.yml
+    - ./group_vars/elasticsearch.yml
+  roles:
+    - {role: ec2_cloudformation, tags: ['report'] }
+    - {role: ec2_instance}

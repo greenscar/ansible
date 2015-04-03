@@ -1,0 +1,38 @@
+security_group:
+   name: "kibana"
+   description: "kibana server"
+   rules:
+      - cidr_ip: "0.0.0.0/0"
+        from_port: "22"
+        proto: "tcp"
+        to_port: "22"
+      - cidr_ip: "0.0.0.0/0"
+        from_port: "5601"
+        proto: "tcp"
+        to_port: "5601"
+   rules_egress:
+      - type: "egress"
+        cidr_ip: "0.0.0.0/0"
+        from_port: "22"
+        proto: "tcp"
+        to_port: "22"
+      - cidr_ip: "0.0.0.0/0"
+        from_port: "9200"
+        proto: "tcp"
+        to_port: "9200"
+      - cidr_ip: "0.0.0.0/0"
+        from_port: "9300"
+        proto: "tcp"
+        to_port: "9300"
+       
+instance:
+   group: "kibana"
+   wait_timeout: "500"
+   size: "m1.small"
+   region: "us-east-1"
+   ami: "ami-8e682ce6"
+   count: 1
+   public_ip: "no"
+   tags:
+       Name: "kibana-test"
+   subnet_dest_name: "PublicSubnet1"

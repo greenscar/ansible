@@ -1,22 +1,43 @@
 security_group:
-    name: "elasticsearch"
-    description: "elasticsearch server"
-    rules:
-       - cidr_ip: "0.0.0.0/0"
-         from_port: "9200"
-         proto: "tcp"
-         to_port: "9200"
-       - cidr_ip: "0.0.0.0/0"
-         from_port: "9300"
-         proto: "tcp"
-         to_port: "9300"
-       - cidr_ip: "0.0.0.0/0"
-         from_port: "22"
-         proto: "tcp"
-         to_port: "22"
-    rules_egress:
-       - type: "egress"
-         cidr_ip: "0.0.0.0/0"
-         from_port: "22"
-         proto: "tcp"
-         to_port: "22"
+   name: "elasticsearch"
+   description: "elasticsearch server"
+   rules:
+      - cidr_ip: "0.0.0.0/0"
+        from_port: "9200"
+        proto: "tcp"
+        to_port: "9200"
+      - cidr_ip: "0.0.0.0/0"
+        from_port: "9300"
+        proto: "tcp"
+        to_port: "9300"
+      - cidr_ip: "0.0.0.0/0"
+        from_port: "22"
+        proto: "tcp"
+        to_port: "22"
+   rules_egress:
+      - type: "egress"
+        cidr_ip: "0.0.0.0/0"
+        from_port: "22"
+        proto: "tcp"
+        to_port: "22"
+      - cidr_ip: "0.0.0.0/0"
+        from_port: "9300"
+        proto: "tcp"
+        to_port: "9300"
+
+package_url: "https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.4.noarch.rpm"
+instance:
+   group: "elasticsearch"
+   wait_timeout: "500"
+   size: "m1.small"
+   region: "us-east-1"
+   ami: "ami-8e682ce6"
+   count: 1
+   public_ip: "yes"
+   tags:
+       Name: "elasticsearch-test"
+   subnet_dest_name: "PrivateSubnet1"
+   volumes:
+     - device_name: /dev/sda1
+       volume_size: 100
+       delete_on_termination: true
