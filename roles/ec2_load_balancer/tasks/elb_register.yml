@@ -1,0 +1,13 @@
+########################################
+# Register the ec2 instances to the ELB
+########################################
+- name: 
+  ec2_elb:
+    instance_id: "{{item.instances[0].id}}"
+    ec2_elbs: "{{elb_info.elb.name}}"
+    state: present
+    wait: 'yes'
+    region: "{{instance.region}}"
+  with_items: "{{ec2_details.results}}"
+    
+     
