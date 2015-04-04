@@ -3,13 +3,9 @@ security_group:
    description: "kibana server"
    rules:
       - cidr_ip: "0.0.0.0/0"
-        from_port: "9200"
+        from_port: "5601"
         proto: "tcp"
-        to_port: "9200"
-      - cidr_ip: "0.0.0.0/0"
-        from_port: "9300"
-        proto: "tcp"
-        to_port: "9300"
+        to_port: "5601"
       - cidr_ip: "0.0.0.0/0"
         from_port: "22"
         proto: "tcp"
@@ -22,9 +18,9 @@ security_group:
         to_port: "22" # ssh
       - type: "egress"
         cidr_ip: "0.0.0.0/0"
-        from_port: "80"
+        from_port: "9200"
         proto: "tcp"
-        to_port: "80" # yum
+        to_port: "9200" # yum
       - type: "egress"
         cidr_ip: "0.0.0.0/0"
         from_port: "443"
@@ -35,8 +31,8 @@ security_group:
         proto: "tcp"
         to_port: "9300" # kibana
 
-file_name: "kibana-1.4.4.noarch.rpm"
-package_url: "https://download.kibana.org/kibana/kibana/{{file_name}}"
+file_name: "kibana-4.0.1-linux-x64.tar.gz"
+package_url: "https://download.elasticsearch.org/kibana/kibana/{{file_name}}"
 install_dir: "/usr/share/kibana/"
 log_dir: "/var/log/kibana"
 cluster_name: "elk-kibana"
@@ -44,8 +40,8 @@ instance:
    security_group: "{{security_group.name}}"
    wait_timeout: "500"
    size: "m1.small"
-   region: "us-east-1"
-   ami: "ami-8e682ce6"
+   region: "us-west-2" # "us-east-1"
+   ami: "ami-ff527ecf" #"ami-8e682ce6"
    count: 1
    public_ip: "no"
    tags:
@@ -53,5 +49,5 @@ instance:
    subnet_dest_name: "PrivateSubnet1"
    volumes:
      - device_name: /dev/sda1
-       volume_size: 100
+       volume_size: 10
        delete_on_termination: true

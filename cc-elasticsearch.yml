@@ -1,28 +1,46 @@
-- name: Create instances
+- name: Create elasticsearch instances
   hosts: localhost
   connection: local
   gather_facts: False
   
+  vars:
+    deploy_group_name: elasticsearch
   vars_files:
     - ./group_vars/all.yml
     - ./group_vars/elasticsearch.yml
   roles:
     - {role: ec2_cloudformation}
     - {role: ec2_security_group}
-    - {role: ec2_instance}
+    - {role: ec2_instances}
    
-    
-- name: Deploy elasticsearch
-  hosts: deploy_to
-  user: ec2-user
-  sudo: yes
-  gather_facts: true
+- name: Create Load Balancer
+  hosts: localhost
+  connection: local
+  gather_facts: False
   
   vars:
-    ec2_details: "{{hostvars.localhost.ec2_details}}"
+    deploy_group_name: elasticsearch
   vars_files:
     - ./group_vars/all.yml
     - ./group_vars/elasticsearch.yml
   roles:
-    - {role: elasticsearch}
+    - {role: ec2_cloudformation}
+    - {role: ec2_security_group}
+    - {role: ec2_load_balancer}
+   
+      
+#- name: Deploy elasticsearch
+#  hosts: deploy_group_name
+#  user: ec2-user
+#  sudo: yes
+#  gather_facts: true
+#  
+#  vars:
+#    ec2_details: "{{hostvars.localhost.ec2_details}}"
+#  vars_files:
+#    - ./group_vars/all.yml
+#    - ./group_vars/elasticsearch.yml
+#  roles:
+#    - {role: elasticsearch}
+    
     

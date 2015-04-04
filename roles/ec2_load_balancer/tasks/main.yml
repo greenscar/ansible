@@ -1,0 +1,11 @@
+#######################################################################
+# Create the AWS instance(s) on which to deploy.
+#######################################################################
+
+
+- include: elb_create.yml
+  tags: [create]
+  
+#- include: elb_destroy.yml
+#  tags: [destroy]
+  

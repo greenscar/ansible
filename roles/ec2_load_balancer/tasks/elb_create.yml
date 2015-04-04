@@ -1,0 +1,8 @@
+- name: create elb
+  ec2_elb_lb:
+    name: "{{ elb_name }}"
+    state: present
+    region: "{{region}}"
+    zones: "{{ elb.zones }}"
+    listeners: "{{ elb.listeners }}"
+    health_check: "{{ elb.health_check }}"

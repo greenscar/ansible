@@ -1,3 +1,4 @@
+
 - name: Create EC2 Security Group
   ec2_group:
     name: "{{security_group.name}}"

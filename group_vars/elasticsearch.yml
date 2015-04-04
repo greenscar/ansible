@@ -35,6 +35,28 @@ security_group:
         proto: "tcp"
         to_port: "9300" # elasticsearch
 
+elb:
+   name: "DEV-elasticsearch"
+   zones:
+      - "us-west-2a"
+      - "us-west-2b"
+   listeners:
+      - protocol: tcp # options are http, https, ssl, tcp
+        load_balancer_port: 9300
+        instance_port: 9300
+      - protocol: tcp # options are http, https, ssl, tcp
+        load_balancer_port: 9200
+        instance_port: 9200
+   health_check:
+      ping_protocol: tcp # options are http, https, ssl, tcp
+      ping_port: 9300
+      response_timeout: 5 # seconds
+      interval: 30 # seconds
+      unhealthy_threshold: 2
+      healthy_threshold: 10
+        
+        
+        
 file_name: "elasticsearch-1.4.4.noarch.rpm"
 package_url: "https://download.elasticsearch.org/elasticsearch/elasticsearch/{{file_name}}"
 install_dir: "/usr/share/elasticsearch/"
@@ -44,10 +66,14 @@ instance:
    security_group: "{{security_group.name}}"
    wait_timeout: "500"
    size: "m1.small"
-   region: "us-east-1"
-   ami: "ami-8e682ce6"
+#   regions: 
+#    - "us-west-2" # "us-east-1"
+#   zones:
+#      - "us-west-2a"
+#      - "us-west-2b"
+   ami: "ami-ff527ecf" #"ami-8e682ce6"
    count: 1
-   public_ip: "no"
+   public_ip: "yes" #"no"
    tags:
        Name: "DEV-elasticsearch"
    subnet_dest_name: "PrivateSubnet1"

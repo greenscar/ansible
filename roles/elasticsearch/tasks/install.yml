@@ -42,10 +42,11 @@
   action: service name=elasticsearch state=restarted
   with_items: "{{ec2_details.instances}}"
 
+# below, host should be  # "{{item.private_ip}}"
 - name: Wait for elasticsearch to be available 
   local_action: 
     module: wait_for 
-      host="{{item.private_ip}}"
+      host="{{item.public_ip}}"
       port=9300
       delay=5
       timeout=300

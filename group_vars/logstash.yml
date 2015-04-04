@@ -35,8 +35,8 @@ security_group:
         proto: "tcp"
         to_port: "9300" # logstash
 
-file_name: "logstash-1.4.4.noarch.rpm"
-package_url: "https://download.logstash.org/logstash/logstash/{{file_name}}"
+file_name: "logstash-1.4.2-1_2c0f5a1.noarch.rpm"
+package_url: "https://download.elasticsearch.org/logstash/logstash/packages/centos/{{file_name}}"
 install_dir: "/usr/share/logstash/"
 log_dir: "/var/log/logstash"
 cluster_name: "elk-logstash"
@@ -44,8 +44,8 @@ instance:
    security_group: "{{security_group.name}}"
    wait_timeout: "500"
    size: "m1.small"
-   region: "us-east-1"
-   ami: "ami-8e682ce6"
+   region: "us-west-2" # "us-east-1"
+   ami: "ami-ff527ecf" #"ami-8e682ce6"
    count: 1
    public_ip: "no"
    tags:

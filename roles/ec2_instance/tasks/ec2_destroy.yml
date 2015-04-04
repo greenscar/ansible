@@ -1,9 +1,0 @@
-- name: Delete EC2 Instance
-  ec2:
-    instance_ids: '{{ec2_details.instance_ids}}'
-    state: 'absent'
-    region: "{{instance.region}}"
-  tags:
-    - destroy
-    
-    
