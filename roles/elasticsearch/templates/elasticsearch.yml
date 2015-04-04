@@ -1,8 +1,8 @@
 cluster.name: {{cluster_name}}
 
-cloud.aws.access_key: ACCESS_KEY_HERE
+#cloud.aws.access_key: ACCESS_KEY_HERE
 
-cloud.aws.secret_key: SECRET_KEY_HERE
+#cloud.aws.secret_key: SECRET_KEY_HERE
 
 cloud.aws.region: {{instance.region}}
 
