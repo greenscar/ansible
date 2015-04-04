@@ -8,8 +8,9 @@
     - ./group_vars/elasticsearch.yml
   roles:
     - {role: ec2_cloudformation}
+    - {role: ec2_security_group}
     - {role: ec2_instance}
-    
+   
     
 - name: Deploy elasticsearch
   hosts: deploy_to
@@ -17,6 +18,8 @@
   sudo: yes
   gather_facts: true
   
+  vars:
+    ec2_details: "{{hostvars.localhost.ec2_details}}"
   vars_files:
     - ./group_vars/all.yml
     - ./group_vars/elasticsearch.yml

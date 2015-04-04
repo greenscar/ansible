@@ -1,0 +1,36 @@
+cluster.name: {{cluster_name}}
+
+cloud.aws.access_key: ACCESS_KEY_HERE
+
+cloud.aws.secret_key: SECRET_KEY_HERE
+
+cloud.aws.region: {{instance.region}}
+
+discovery.type: ec2
+
+discovery.ec2.tag.Name: {{instance.tags.Name}}
+discovery.ec2.tag.type: elasticsearch
+
+http.cors.enabled: true
+
+http.cors.allow-origin: "*"
+
+
+path.logs: {{log_dir}}
+
+
+
+
+
+
+#cloud.aws.region:
+# us-east-1
+#discovery.type: ec2
+#
+#discovery.ec2.tag.type: elasticsearch
+#
+#path.logs: /var/log/elasticsearch
+#
+#cluster.name: ElasticSearch
+#discovery.ec2.groups: sg-3c4e3b58
+#cloud.node.auto_attributes: true

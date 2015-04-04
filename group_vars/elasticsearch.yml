@@ -1,5 +1,5 @@
 security_group:
-   name: "elasticsearch"
+   name: "DEV-elasticsearch"
    description: "elasticsearch server"
    rules:
       - cidr_ip: "0.0.0.0/0"
@@ -19,15 +19,28 @@ security_group:
         cidr_ip: "0.0.0.0/0"
         from_port: "22"
         proto: "tcp"
-        to_port: "22"
+        to_port: "22" # ssh
+      - type: "egress"
+        cidr_ip: "0.0.0.0/0"
+        from_port: "80"
+        proto: "tcp"
+        to_port: "80" # yum
+      - type: "egress"
+        cidr_ip: "0.0.0.0/0"
+        from_port: "443"
+        proto: "tcp"
+        to_port: "443" # pip
       - cidr_ip: "0.0.0.0/0"
         from_port: "9300"
         proto: "tcp"
-        to_port: "9300"
+        to_port: "9300" # elasticsearch
 
 package_url: "https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.4.noarch.rpm"
+install_dir: "/usr/share/elasticsearch/"
+log_dir: "/var/log/elasticsearch"
+cluster_name: "ELK ElasticSearch"
 instance:
-   group: "elasticsearch"
+   security_group: "{{security_group.name}}"
    wait_timeout: "500"
    size: "m1.small"
    region: "us-east-1"

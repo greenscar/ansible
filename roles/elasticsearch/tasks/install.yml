@@ -1,11 +1,61 @@
 
-    - name: yum update
-      yum: name=* state=latest
-      sudo: yes
-      
-    - name: download source
-      get_url: url={{package_url}} dest=/tmp force=yes
-        
+- name: yum upgrade all packages
+  yum: name=* state=latest
+  sudo: yes
+  with_items: "{{ec2_details.instances}}"
+  
+- name: download ElasticSearch rpm
+  get_url: url={{package_url}} dest=/tmp force=yes
+  register: download_results
+  with_items: "{{ec2_details.instances}}"
+ 
+- name: debug_me
+  debug: msg="{{download_results.dest}}"
+  with_items: "{{ec2_details.instances}}"
+  
+- name: Make log dir
+  file: path="{{log_dir}}" state="directory"
+  with_items: "{{ec2_details.instances}}"
+  
+- name: Install ElasticSearch
+  yum: name="{{download_results.dest}}"
+  with_items: "{{ec2_details.instances}}"
+  
+- name: Delete ElasticSearch rpm
+  file: path="{{download_results.dest}}" state="absent"
+  with_items: "{{ec2_details.instances}}"
+  
+# Install plugins
+- name: Install head plugin
+  shell: "{{install_dir}}/bin/plugin -install mobz/elasticsearch-head"
+  with_items: "{{ec2_details.instances}}"
+- name: Install bigdesk plugin
+  shell: "{{install_dir}}/bin/plugin -install lukas-vlcek/bigdesk"
+  with_items: "{{ec2_details.instances}}"
+- name: Install cloud-aws plugin
+  shell: "{{install_dir}}/bin/plugin install elasticsearch/elasticsearch-cloud-aws/2.4.1"
+  with_items: "{{ec2_details.instances}}"
+
+- name: Load config file elasticsearch.yml with proper values
+  template: elasticsearch.yml dest=/etc/elasticsearch/elasticsearch.yml
+  with_items: "{{ec2_details.instances}}"
+    
+- name: restart elasticsearch
+  action: service name=elasticsearch state=restarted
+  with_items: "{{ec2_details.instances}}"
+
+- name: Wait for SSH to be available 
+  local_action: 
+    module: wait_for 
+      host="{{item.private_ip}}"
+      port=9200
+      delay=5
+      timeout=300
+  with_items: "{{ec2_details.instances}}"
+  sudo: false
+  tags: 
+    - create
+
 #        - name: Install JRE
 #          apt: pkg=openjdk-6-jre-headless state=latest install_recommends=no update_cache=yes
 #    
