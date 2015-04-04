@@ -1,7 +1,11 @@
 security_group:
-   name: "elasticsearch"
-   description: "elasticsearch server"
+   name: "DEV-logstash"
+   description: "logstash server"
    rules:
+      - cidr_ip: "0.0.0.0/0"
+        from_port: "9200"
+        proto: "tcp"
+        to_port: "9200"
       - cidr_ip: "0.0.0.0/0"
         from_port: "9300"
         proto: "tcp"
@@ -15,14 +19,29 @@ security_group:
         cidr_ip: "0.0.0.0/0"
         from_port: "22"
         proto: "tcp"
-        to_port: "22"
+        to_port: "22" # ssh
+      - type: "egress"
+        cidr_ip: "0.0.0.0/0"
+        from_port: "80"
+        proto: "tcp"
+        to_port: "80" # yum
+      - type: "egress"
+        cidr_ip: "0.0.0.0/0"
+        from_port: "443"
+        proto: "tcp"
+        to_port: "443" # pip
       - cidr_ip: "0.0.0.0/0"
         from_port: "9300"
         proto: "tcp"
-        to_port: "9300"
-       
+        to_port: "9300" # logstash
+
+file_name: "logstash-1.4.4.noarch.rpm"
+package_url: "https://download.logstash.org/logstash/logstash/{{file_name}}"
+install_dir: "/usr/share/logstash/"
+log_dir: "/var/log/logstash"
+cluster_name: "elk-logstash"
 instance:
-   group: "logstash"
+   security_group: "{{security_group.name}}"
    wait_timeout: "500"
    size: "m1.small"
    region: "us-east-1"
@@ -30,5 +49,9 @@ instance:
    count: 1
    public_ip: "no"
    tags:
-       Name: "logstash-test"
+       Name: "DEV-logstash"
    subnet_dest_name: "PrivateSubnet1"
+   volumes:
+     - device_name: /dev/sda1
+       volume_size: 10
+       delete_on_termination: true

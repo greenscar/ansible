@@ -21,7 +21,7 @@
     wait_timeout: "{{instance.wait_timeout}}"
     count: "{{instance.count}}"
     instance_tags: "{{instance.tags}}"
-    vpc_subnet_id: "{{ec2_cloudformation_results[instance.subnet_dest_name]}}"
+    vpc_subnet_id: "subnet-a618ad8d" #"{{ec2_cloudformation_results[instance.subnet_dest_name]}}"
     assign_public_ip: "{{instance.public_ip}}"
     volumes: "{{instance.volumes}}"
   register: ec2_details

@@ -39,7 +39,7 @@ file_name: "elasticsearch-1.4.4.noarch.rpm"
 package_url: "https://download.elasticsearch.org/elasticsearch/elasticsearch/{{file_name}}"
 install_dir: "/usr/share/elasticsearch/"
 log_dir: "/var/log/elasticsearch"
-cluster_name: "elk_elasticSearch"
+cluster_name: "elk-elasticsearch"
 instance:
    security_group: "{{security_group.name}}"
    wait_timeout: "500"
