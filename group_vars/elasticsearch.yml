@@ -56,7 +56,6 @@ elb:
       healthy_threshold: 10
         
         
-        
 file_name: "elasticsearch-1.4.4.noarch.rpm"
 package_url: "https://download.elasticsearch.org/elasticsearch/elasticsearch/{{file_name}}"
 install_dir: "/usr/share/elasticsearch/"
@@ -66,8 +65,8 @@ instance:
    security_group: "{{security_group.name}}"
    wait_timeout: "500"
    size: "m1.small"
-#   regions: 
-#    - "us-west-2" # "us-east-1"
+# "us-east-1"
+   region: "us-west-2"
 #   zones:
 #      - "us-west-2a"
 #      - "us-west-2b"
@@ -76,7 +75,9 @@ instance:
    public_ip: "yes" #"no"
    tags:
        Name: "DEV-elasticsearch"
-   subnet_dest_name: "PrivateSubnet1"
+   subnets: 
+     - "PrivateSubnet1"
+#     - "PrivateSubnet2"
    volumes:
      - device_name: /dev/sda1
        volume_size: 100

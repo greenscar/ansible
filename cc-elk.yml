@@ -2,7 +2,52 @@
 ########################################################
 # ELASTICSEARCH
 ########################################################
-
+- name: Create EC2 instances
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  
+  vars:
+    deploy_group_name: elasticsearch_servers
+  vars_files:
+    - ./group_vars/all.yml
+    - ./group_vars/elasticsearch.yml
+  roles:
+    - {role: ec2_cloudformation}
+    - {role: ec2_security_group}
+    - {role: ec2_instances}
+   
+      
+- name: Deploy elasticsearch
+  hosts: elasticsearch_servers
+  user: ec2-user
+  sudo: yes
+  gather_facts: true
+  
+  vars:
+    ec2_details: "{{hostvars.localhost.ec2_details}}"
+  vars_files:
+    - ./group_vars/all.yml
+    - ./group_vars/elasticsearch.yml
+  roles:
+    - {role: elasticsearch}
+    
+    
+- name: Create Load Balancer & put elasticsearch instances in it.
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  
+  vars:
+    deploy_group_name: elasticsearch
+  vars_files:
+    - ./group_vars/all.yml
+    - ./group_vars/elasticsearch.yml
+  roles:
+    - {role: ec2_cloudformation}
+    - {role: ec2_security_group}
+    - {role: ec2_load_balancer}
+   
 ########################################################
 # LOGSTASH
 ########################################################
