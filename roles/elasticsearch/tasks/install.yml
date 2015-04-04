@@ -1,11 +1,11 @@
 
-- name: yum upgrade all packages
-  yum: name=* state=latest
-  sudo: yes
-  with_items: "{{ec2_details.instances}}"
+#- name: yum upgrade all packages
+#  yum: name=* state=latest
+#  sudo: yes
+#  with_items: "{{ec2_details.instances}}"
   
 - name: download ElasticSearch rpm
-  get_url: url={{package_url}} dest=/tmp/{{file_name}} force=yes
+  get_url: url={{package_url}} dest=/tmp/{{file_name}} force=yes validate_certs=no
   with_items: "{{ec2_details.instances}}"
   
 - name: Make log dir
@@ -46,11 +46,9 @@
   local_action: 
     module: wait_for 
       host="{{item.private_ip}}"
-      port=9200
+      port=9300
       delay=5
       timeout=300
   with_items: "{{ec2_details.instances}}"
   sudo: false
-  tags: 
-    - create
     
