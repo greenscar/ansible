@@ -1,0 +1,8 @@
+input { 
+  file { path => "/tmp/logstash.txt" } 
+} 
+output { 
+  elasticsearch { 
+    host => "ELASTICSEARCH_URL_HERE" protocol => "http" 
+  } 
+}

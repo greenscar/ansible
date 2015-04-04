@@ -1,0 +1,3 @@
+#- name: show envt vars
+#  debug: msg="{{ec2_details}}"
+- include: install.yml

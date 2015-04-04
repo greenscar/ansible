@@ -1,0 +1,40 @@
+
+#- name: yum upgrade all packages
+#  yum: name=* state=latest
+#  sudo: yes
+#  with_items: "{{ec2_details.instances}}"
+  
+- name: Download Kibana tar
+  get_url: url={{package_url}} dest=/tmp/{{file_name}} force=yes validate_certs=no
+  with_items: "{{ec2_details.instances}}"
+  
+- name: Make log dir
+  file: path="{{log_dir}}" state="directory"
+  with_items: "{{ec2_details.instances}}"
+  
+- name: Make install dir
+  file: path="{{install_dir}}" state="directory"
+  with_items: "{{ec2_details.instances}}"
+  
+- name: add uname to /etc/hosts
+  shell: "echo \"127.0.0.1 `uname -n`\" >> /etc/hosts"
+  
+- name: Install Kibana
+  unarchive: src="/tmp/{{file_name}}" dest="{{install_dir}}" copy=no
+  
+- name: Delete Kibana tar
+  file: path="/tmp/{{file_name}}" state="absent"
+  with_items: "{{ec2_details.instances}}"
+  
+- name: Load config file logstash.conf with proper values
+  template: src="logstash.conf.yml" dest="/etc/logstash/conf.d/logstash.conf"
+  with_items: "{{ec2_details.instances}}"
+    
+
+- name: Setup kibana4 service
+  template: src="kibana4.yml" dest="/etc/init.d/kibana4"
+  with_items: "{{ec2_details.instances}}"
+    
+- name: Restart Kibana
+  action: service name=kbana4 state=restarted
+  with_items: "{{ec2_details.instances}}"

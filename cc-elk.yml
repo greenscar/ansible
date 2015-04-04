@@ -1,0 +1,70 @@
+
+########################################################
+# ELASTICSEARCH
+########################################################
+
+########################################################
+# LOGSTASH
+########################################################
+    
+- name: Create logstash instances
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+    deploy_group_name: logstash_servers
+  vars_files:
+    - ./group_vars/all.yml
+    - ./group_vars/logstash.yml
+  roles:
+    - {role: ec2_cloudformation}
+    - {role: ec2_security_group}
+    - {role: ec2_instances}
+   
+    
+- name: Deploy logstash
+  hosts: logstash_servers
+  user: ec2-user
+  sudo: yes
+  gather_facts: true
+  
+  vars:
+    ec2_details: "{{hostvars.localhost.ec2_details}}"
+  vars_files:
+    - ./group_vars/all.yml
+    - ./group_vars/logstash.yml
+  roles:
+    - {role: logstash}
+    
+########################################################
+# KIBANA
+########################################################
+- name: Create kibana instances
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+    deploy_group_name: kibana_servers
+  vars_files:
+    - ./group_vars/all.yml
+    - ./group_vars/kibana.yml
+  roles:
+    - {role: ec2_cloudformation}
+    - {role: ec2_security_group}
+    - {role: ec2_instances}
+   
+    
+- name: Deploy kibana
+  hosts: kibana_servers
+  user: ec2-user
+  sudo: yes
+  gather_facts: true
+  
+  vars:
+    ec2_details: "{{hostvars.localhost.ec2_details}}"
+  vars_files:
+    - ./group_vars/all.yml
+    - ./group_vars/kibana.yml
+  roles:
+    - {role: kibana}
+    
