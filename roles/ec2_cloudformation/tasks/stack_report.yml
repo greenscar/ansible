@@ -1,0 +1,23 @@
+
+- debug: msg={{ cloud_info }}
+
+# The public URL of the site.
+#- debug: msg={{ cloud_info.stack_outputs.WebsiteURL}}
+
+- name: Report AWS Cloudformation usage
+  shell: "hosts/ec2.py --list"
+  register: ec2_report
+
+- debug: msg={{ec2_report.stdout}}
+
+#- debug: msg="{{ec2_report.changed}}"
+
+
+#- debug: msg="{{ec2_report.stdout_lines}}"
+
+
+- debug: 
+    msg="{{ item.key }} -- {{ item.value }}"
+  when: False # item.key == "stdout"
+  with_dict: ec2_report
+

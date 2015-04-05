@@ -1,0 +1,8 @@
+# Conditionally decide to load in variables when x is 0, otherwise do not.
+- include_vars: ec2output.json
+
+- debug: msg={{stdout}}
+
+- debug: msg={{stdout._meta.hostvars}}
+
+- debug: msg={{stdout.type_t1_micro}}

@@ -1,0 +1,6 @@
+# Ignore jedit temp files
+*.*~
+\#*\#
+
+# Ignore osx index files
+.DS_Store

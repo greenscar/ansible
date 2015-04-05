@@ -1,0 +1,23 @@
+########################################################
+# Execute master cloudformation / gather info
+########################################################
+
+
+########################################################
+# Setup ansible master on aws
+########################################################
+- name: Create EC2 instance
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  
+  vars:
+    deploy_group_name: ansible_master
+  vars_files:
+    - ./group_vars/all.yml
+    - ./group_vars/ansible-master.yml
+  roles:
+#    - {role: ec2_cloudformation}
+    - {role: ec2_security_group}
+    - {role: ec2_instances}
+#    - {role: ansible-master}
