@@ -77,8 +77,6 @@
   vars:
     ec2_details: "{{hostvars.localhost.ec2_details}}"
     elasticsearch_elb: "{{hostvars.localhost.elb_info.elb.dns_name}}"
-    elb1: "{{hostvars.localhost.elb}}"
-    elb2: "{{hostvars.localhost.elb_info}}"
   vars_files:
     - ./group_vars/all.yml
     - ./group_vars/logstash.yml

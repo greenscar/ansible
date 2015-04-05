@@ -1,3 +1,8 @@
+
+
+- name: Implement cloudformation file.
+  debug: msg="Import cloudformation file to aws"
+  
 - name: gather cloudformation data
   cloudformation_info:
     region: "{{ master.region }}"
