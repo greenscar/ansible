@@ -1,0 +1,8 @@
+input { 
+  file { path => "/tmp/logstash.txt" } 
+} 
+output { 
+  elasticsearch { 
+    host => "{{elb_dns_name}}" protocol => "http" 
+  } 
+}

@@ -1,38 +1,57 @@
 security_group:
-   name: "kibana"
+   name: "DEV-kibana"
    description: "kibana server"
    rules:
-      - cidr_ip: "0.0.0.0/0"
-        from_port: "22"
-        proto: "tcp"
-        to_port: "22"
       - cidr_ip: "0.0.0.0/0"
         from_port: "5601"
         proto: "tcp"
         to_port: "5601"
+      - cidr_ip: "0.0.0.0/0"
+        from_port: "22"
+        proto: "tcp"
+        to_port: "22"
    rules_egress:
       - type: "egress"
         cidr_ip: "0.0.0.0/0"
         from_port: "22"
         proto: "tcp"
-        to_port: "22"
-      - cidr_ip: "0.0.0.0/0"
+        to_port: "22" # ssh
+      - type: "egress"
+        cidr_ip: "0.0.0.0/0"
         from_port: "9200"
         proto: "tcp"
-        to_port: "9200"
+        to_port: "9200" # yum
+      - type: "egress"
+        cidr_ip: "0.0.0.0/0"
+        from_port: "443"
+        proto: "tcp"
+        to_port: "443" # pip
       - cidr_ip: "0.0.0.0/0"
         from_port: "9300"
         proto: "tcp"
-        to_port: "9300"
-       
+        to_port: "9300" # kibana
+
+file_name: "kibana-4.0.1-linux-x64.tar.gz"
+package_url: "https://download.elasticsearch.org/kibana/kibana/{{file_name}}"
+install_dir: "/usr/share/kibana/"
+install_subdir: " kibana-4.0.1-linux-x64"
+log_dir: "/var/log/kibana"
+cluster_name: "elk-kibana"
 instance:
-   group: "kibana"
+   security_group: "{{security_group.name}}"
    wait_timeout: "500"
    size: "m1.small"
-   region: "us-east-1"
-   ami: "ami-8e682ce6"
+# "us-east-1"
+   region: "us-west-2"
+   ami: "ami-ff527ecf" #"ami-8e682ce6"
    count: 1
    public_ip: "no"
    tags:
-       Name: "kibana-test"
-   subnet_dest_name: "PublicSubnet1"
+       Name: "DEV-kibana"
+   subnets: 
+     - "PrivateSubnet1"
+#     - "PrivateSubnet2"
+   volumes:
+     - device_name: /dev/sda1
+       volume_size: 10
+       delete_on_termination: true

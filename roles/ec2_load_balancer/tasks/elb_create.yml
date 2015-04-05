@@ -1,0 +1,29 @@
+
+####################
+# Create the elb
+####################
+- name: create elb
+  ec2_elb_lb:
+    name: "{{ elb.name }}"
+    state: present
+    region: "{{instance.region}}"
+    zones: "{{ elb.zones }}"
+    listeners: "{{ elb.listeners }}"
+    health_check: "{{ elb.health_check }}"
+  register: elb_info
+  
+- set_fact: 
+    elb_info.elb.dns_name: "{{elb_info.elb.dns_name}}"
+  
+- name: log elb_info
+  debug: msg="{{elb_info}}"
+  
+  
+- name: log elb_info.elb
+  debug: msg="{{elb_info.elb}}"
+  
+- name: log elb_info.elb.name
+  debug: msg="{{elb_info.elb.name}}"
+  
+- name: log elb_info.elb.dns_name
+  debug: msg="{{elb_info.elb.dns_name}}"

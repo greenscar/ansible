@@ -1,5 +1,5 @@
 security_group:
-   name: "elasticsearch"
+   name: "DEV-elasticsearch"
    description: "elasticsearch server"
    rules:
       - cidr_ip: "0.0.0.0/0"
@@ -19,24 +19,65 @@ security_group:
         cidr_ip: "0.0.0.0/0"
         from_port: "22"
         proto: "tcp"
-        to_port: "22"
+        to_port: "22" # ssh
+      - type: "egress"
+        cidr_ip: "0.0.0.0/0"
+        from_port: "80"
+        proto: "tcp"
+        to_port: "80" # yum
+      - type: "egress"
+        cidr_ip: "0.0.0.0/0"
+        from_port: "443"
+        proto: "tcp"
+        to_port: "443" # pip
       - cidr_ip: "0.0.0.0/0"
         from_port: "9300"
         proto: "tcp"
-        to_port: "9300"
+        to_port: "9300" # elasticsearch
 
-package_url: "https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.4.noarch.rpm"
+elb:
+   name: "DEV-elasticsearch"
+   zones:
+      - "us-west-2a"
+      - "us-west-2b"
+   listeners:
+      - protocol: tcp # options are http, https, ssl, tcp
+        load_balancer_port: 9300
+        instance_port: 9300
+      - protocol: tcp # options are http, https, ssl, tcp
+        load_balancer_port: 9200
+        instance_port: 9200
+   health_check:
+      ping_protocol: tcp # options are http, https, ssl, tcp
+      ping_port: 9300
+      response_timeout: 5 # seconds
+      interval: 30 # seconds
+      unhealthy_threshold: 2
+      healthy_threshold: 10
+        
+        
+file_name: "elasticsearch-1.4.4.noarch.rpm"
+package_url: "https://download.elasticsearch.org/elasticsearch/elasticsearch/{{file_name}}"
+install_dir: "/usr/share/elasticsearch/"
+log_dir: "/var/log/elasticsearch"
+cluster_name: "elk-elasticsearch"
 instance:
-   group: "elasticsearch"
+   security_group: "{{security_group.name}}"
    wait_timeout: "500"
    size: "m1.small"
-   region: "us-east-1"
-   ami: "ami-8e682ce6"
+# "us-east-1"
+   region: "us-west-2"
+#   zones:
+#      - "us-west-2a"
+#      - "us-west-2b"
+   ami: "ami-ff527ecf" #"ami-8e682ce6"
    count: 1
-   public_ip: "yes"
+   public_ip: "yes" #"no"
    tags:
-       Name: "elasticsearch-test"
-   subnet_dest_name: "PrivateSubnet1"
+       Name: "DEV-elasticsearch"
+   subnets: 
+     - "PrivateSubnet1"
+#     - "PrivateSubnet2"
    volumes:
      - device_name: /dev/sda1
        volume_size: 100

@@ -1,59 +1,46 @@
-- name: Create instances
+- name: Create EC2 instances
   hosts: localhost
   connection: local
   gather_facts: False
   
+  vars:
+    deploy_group_name: elasticsearch_servers
   vars_files:
     - ./group_vars/all.yml
     - ./group_vars/elasticsearch.yml
   roles:
     - {role: ec2_cloudformation}
-    - {role: ec2_instance}
-    
-- name: Configure instance
-  hosts: deploy_to
+    - {role: ec2_security_group}
+    - {role: ec2_instances}
+   
+      
+- name: Deploy elasticsearch
+  hosts: elasticsearch_servers
   user: ec2-user
   sudo: yes
   gather_facts: true
-
-  tags:
-    - create
-
-  # Install Java, install Elasticsearch, replace settings....
-  tasks:
-     # Use with_items to add each instances public IP to a new hostgroup for use in the next play.
-    - name: Add new instances to host group
-      local_action: add_host name=${item.public_dns_name} groups=deploy_to
-      with_items: ${ec2_details.instances}
-
-    - name: yum update
-      yum: name=* state=latest
-      
-    - name: download source
-      get_url: url={{package_url}} dest=/tmp force=yes
-        
-#        - name: Install JRE
-#          apt: pkg=openjdk-6-jre-headless state=latest install_recommends=no update_cache=yes
-#    
-#        - name: Download ElasticSearch package
-#          get_url: url=http://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.0.deb dest=~/elasticsearch-0.90.0.deb
-#    
-#        - name: Install ES .deb file
-#          shell: dpkg -i ~/elasticsearch-0.90.0.deb
-#          notify: restart elasticsearch
-#    
-#        - name: Install cloud-aws plugin
-#          shell: /usr/share/elasticsearch/bin/plugin -install elasticsearch/elasticsearch-cloud-aws/1.11.0
-#          notify: restart elasticsearch
-#    
-#        - name: Make elasticsearch config dir
-#          file: path=/etc/elasticsearch/ state=directory
-#    
-#        - name: Copy over Elasticsearch settings      
-#          copy: src=./elasticsearch/elasticsearch.yml dest=/etc/elasticsearch/elasticsearch.yml
-#          notify: restart elasticsearch
-#     
-#      handlers:
-#        - name: restart elasticsearch
-#          action: service name=elasticsearch state=restarted
-
+  
+  vars:
+    ec2_details: "{{hostvars.localhost.ec2_details}}"
+  vars_files:
+    - ./group_vars/all.yml
+    - ./group_vars/elasticsearch.yml
+  roles:
+    - {role: elasticsearch}
+    
+    
+- name: Create Load Balancer
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  
+  vars:
+    deploy_group_name: elasticsearch
+  vars_files:
+    - ./group_vars/all.yml
+    - ./group_vars/elasticsearch.yml
+  roles:
+    - {role: ec2_cloudformation}
+    - {role: ec2_security_group}
+    - {role: ec2_load_balancer}
+   

@@ -1,0 +1,13 @@
+- name: Create elasticsearch instances
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  
+  vars:
+    deploy_group_name: elasticsearch
+  vars_files:
+    - ./group_vars/all.yml
+    - ./group_vars/elasticsearch.yml
+  roles:
+    - {role: ec2_cloudformation}
+   

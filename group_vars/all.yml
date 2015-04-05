@@ -1,5 +1,19 @@
 
 master:
-   region: "us-east-1"
+   region: "us-west-2"
    stack_name: "BravoInfrastructure-integration"
-   keypair: "bravo-infra"
+   keypair: "key_pair_oregon"
+   
+#####
+# export ANSIBLE_HOST_KEY_CHECKING=False
+# NOTE: CHANGE THE ec2.ini REGIONS 
+# && CHANGE THE .bash_profile KEYS USED
+# && MAKE SURE YOU SET THE AWS PROFILE USED.
+# ALSO CHANGE THE AMI BEING USED IN CONFIG FILES.
+# CHANGE # host="{{item.private_ip}}" IN e2_create.yml
+# CHANGE REGION / API / PUBLIC_IP IN elasticsearch.yml
+# CHANGE local_action: add_host name="{{item.private_ip}}" groups=deploy_to IN ec2_create.yml
+#####
+#   region: "us-east-1"
+#   stack_name: "BravoInfrastructure-integration"
+#   keypair: "bravo-infra"

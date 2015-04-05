@@ -6,4 +6,4 @@
     - ./group_vars/elasticsearch.yml
   roles:
     - {role: ec2_cloudformation, tags: ['report'] }
-    - {role: ec2_instance}
+    - {role: ec2_instances}

@@ -1,14 +1,33 @@
+
+
+- name: Implement cloudformation file.
+  debug: msg="Import cloudformation file to aws"
+  
 - name: gather cloudformation data
   cloudformation_info:
     region: "{{ master.region }}"
     stack_name: "{{ master.stack_name }}"
   register: ec2_cloudformation_results 
+  ignore_errors: yes
   tags: 
     - create
     - report
+    
+- name: Set VPCId for testing in my personal account
+  set_fact:
+      ec2_cloudformation_results:
+          VPCId: vpc-cbe65bae
+          PrivateSubnet1: subnet-b3a52fd6
+          PrivateSubnet2: subnet-39b37d60
+  when: ec2_cloudformation_results['VPCId'] is not defined
 
+
+ 
+    
 - name: debug
   debug: msg="{{ec2_cloudformation_results}}"
+  ignore_errors: yes
   tags: 
     - create
     - report
+    
