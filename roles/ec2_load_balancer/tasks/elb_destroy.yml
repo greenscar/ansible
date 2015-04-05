@@ -1,8 +1,8 @@
-- name: create elb
+- name: destroy elb
   ec2_elb_lb:
-    name: "{{ elb_name }}"
+    name: "{{ elb.name }}"
     state: absent
-#    region: "{{region}}"
+    region: "{{instance.region}}"
 #    zones:
 #      - us-west-1
 #      - us-west-2

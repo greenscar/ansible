@@ -3,6 +3,6 @@ input {
 } 
 output { 
   elasticsearch { 
-    host => "{{elasticsearch_dns_name}}" protocol => "http" 
+    host => "{{elb_dns_name}}" protocol => "http" 
   } 
 }

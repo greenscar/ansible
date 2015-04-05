@@ -58,7 +58,7 @@
   gather_facts: False
   vars:
     deploy_group_name: logstash_servers
-    elasticsearch_dns_name: "{{hostvars.localhost.elb_info.elb.public_dns_name}}"
+    elasticsearch_elb: "{{hostvars.localhost.elb_info.elb.dns_name}}"
   vars_files:
     - ./group_vars/all.yml
     - ./group_vars/logstash.yml
@@ -76,6 +76,9 @@
   
   vars:
     ec2_details: "{{hostvars.localhost.ec2_details}}"
+    elasticsearch_elb: "{{hostvars.localhost.elb_info.elb.dns_name}}"
+    elb1: "{{hostvars.localhost.elb}}"
+    elb2: "{{hostvars.localhost.elb_info}}"
   vars_files:
     - ./group_vars/all.yml
     - ./group_vars/logstash.yml
@@ -91,7 +94,7 @@
   gather_facts: False
   vars:
     deploy_group_name: kibana_servers
-    elasticsearch_dns_name: "{{hostvars.localhost.elb_info.elb.public_dns_name}}"
+    elasticsearch_dns_name: "{{hostvars.localhost.elb_info.elb.dns_name}}"
   vars_files:
     - ./group_vars/all.yml
     - ./group_vars/kibana.yml
@@ -109,6 +112,7 @@
   
   vars:
     ec2_details: "{{hostvars.localhost.ec2_details}}"
+    elasticsearch_elb: "{{hostvars.localhost.elb_info.elb.dns_name}}"
   vars_files:
     - ./group_vars/all.yml
     - ./group_vars/kibana.yml

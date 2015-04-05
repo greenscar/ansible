@@ -20,8 +20,8 @@ git config --global user.email "jamess@cloudcruiser.com"
 git config --global user.name "james"
                                                                                100% 1692     1.7KB/s   00:00    
 
-export AWS_ACCESS_KEY_ID='AKIAI6NRUKYA36Y5L2LA'
-export AWS_SECRET_ACCESS_KEY='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'
+export AWS_ACCESS_KEY_ID='xxxxxx'
+export AWS_SECRET_ACCESS_KEY='xxxxxxxy'
 export ANSIBLE_HOST_KEY_CHECKING=False
 # Then back on ec2 instance:
 

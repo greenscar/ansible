@@ -44,13 +44,16 @@ instance:
    security_group: "{{security_group.name}}"
    wait_timeout: "500"
    size: "m1.small"
-   region: "us-west-2" # "us-east-1"
+# "us-east-1"
+   region: "us-west-2"
    ami: "ami-ff527ecf" #"ami-8e682ce6"
    count: 1
    public_ip: "no"
    tags:
        Name: "DEV-logstash"
-   subnet_dest_name: "PrivateSubnet1"
+   subnets: 
+     - "PrivateSubnet1"
+#     - "PrivateSubnet2"
    volumes:
      - device_name: /dev/sda1
        volume_size: 10
