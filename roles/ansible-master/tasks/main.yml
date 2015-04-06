@@ -1,0 +1,9 @@
+- name: debug hostvars
+  debug: log="{{hostvars}}"
+  when: hostvars is defined
+  ignore_errors: yes
+  
+- name: debug localhost
+  debug: msg="{{localhost}}"
+  when: localhost is defined
+  ignore_errors: yes

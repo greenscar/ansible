@@ -103,9 +103,25 @@
 
 # Use with_items to add each instances public IP to a new hostgroup for use in the next play.
 # local_action: add_host name="{{item.private_ip}}" groups=deploy_to
-- name: Add new instances to host group
-  local_action: add_host name="{{item.instances[0].public_ip}}" groups="{{deploy_group_name}}"
+#- name: Add new instances to host group
+#  local_action: add_host name="{{item.instances[0].public_ip}}" groups="{{deploy_group_name}}"
+#  with_items: "{{ec2_details.results}}"
+    
+    
+- name: ec2_details debug
+  debug: msg="{{ec2_details}}"
+  
+- name: ec2_details_instances
+  debug: msg="{{ec2_details.results}}"
+  
+- name: debug item loop
+  debug: msg="{{item}}"
+  with_items: "{{ec2_details.results}}"
+  
+- name: debug ip addresses
+  debug: msg="{{item.instances[0].public_ip}}"
   with_items: "{{ec2_details.results}}"
     
-    
-    
+- name: debug item.instances
+  debug: msg="{{hostvars}}"
+  

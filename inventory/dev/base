@@ -1,0 +1,14 @@
+[local]
+localhost
+
+
+# The EC2 plugin will populate these groups, but we need to add empty entries
+# here to make aliases for them below.
+[ansible-master]
+[tag_ansible-master]
+
+[master:children]
+ansible-master
+
+#[ansible-master:children]
+tag_ansible-master

@@ -38,7 +38,7 @@ instance:
    subnets: 
      - "PrivateSubnet1"
 #     - "PrivateSubnet2"
-#   volumes:
-#     - device_name: /dev/sda1
-#       volume_size: 10
-#       delete_on_termination: true
+   volumes:
+     - device_name: /dev/sda1
+       volume_size: 8
+       delete_on_termination: true
