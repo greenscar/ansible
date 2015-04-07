@@ -9,7 +9,7 @@ cloud.aws.region: {{instance.region}}
 discovery.type: ec2
 
 discovery.ec2.tag.Name: {{instance.tags.Name}}
-discovery.ec2.tag.type: elasticsearch
+#discovery.ec2.tag.type: elasticsearch
 
 http.cors.enabled: true
 

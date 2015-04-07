@@ -1,8 +1,15 @@
-
-- name: yum upgrade all packages
-  yum: name=* state=latest
-  sudo: yes
+# As we are blocking outbound ports, taking this out.
+#- name: yum upgrade all packages
+#  yum: name=* state=latest
+#  sudo: yes
+#  with_items: "{{ec2_details.results}}"
+- name: debug name
+  debug: msg="{{item}}"
   with_items: "{{ec2_details.results}}"
+#- name: debug elasticsearch_ip
+#  debug: msg="{{elasticsearch_ip}}" 
+#- name: debug elasticsearch_servers
+#  debug: msg="{{elasticsearch_servers}}"
   
 - name: download ElasticSearch rpm
   get_url: url={{package_url}} dest=/tmp/{{file_name}} force=yes validate_certs=no
@@ -15,7 +22,6 @@
 - name: add uname to /etc/hosts
   shell: "echo \"127.0.0.1 `uname -n`\" >> /etc/hosts"
   
-  
 - name: Install ElasticSearch
   yum: name="/tmp/{{file_name}}"
   with_items: "{{ec2_details.results}}"
@@ -27,12 +33,15 @@
 - name: Install head plugin
   shell: "{{install_dir}}/bin/plugin -install mobz/elasticsearch-head"
   with_items: "{{ec2_details.results}}"
+  ignore_errors: True
 - name: Install bigdesk plugin
   shell: "{{install_dir}}/bin/plugin -install lukas-vlcek/bigdesk"
   with_items: "{{ec2_details.results}}"
+  ignore_errors: True
 - name: Install cloud-aws plugin
   shell: "{{install_dir}}/bin/plugin install elasticsearch/elasticsearch-cloud-aws/2.4.1"
   with_items: "{{ec2_details.results}}"
+  ignore_errors: True
 
 - name: Load config file elasticsearch.yml with proper values
   template: src="elasticsearch.yml" dest="/etc/elasticsearch/elasticsearch.yml"
@@ -42,14 +51,20 @@
   action: service name=elasticsearch state=restarted
   with_items: "{{ec2_details.results}}"
 
+# We do not want the install files to test to ensure the port is listening. 
+# Therefore I commented out what is below & will replace it with a sleep.
 # below, host should be  # "{{item.private_ip}}"
-- name: Wait for elasticsearch to be available 
-  local_action: 
-    module: wait_for 
-      host="{{item.instances[0].public_ip}}"
-      port=9300
-      delay=5
-      timeout=300
-  with_items: "{{ec2_details.results}}"
-  sudo: false
+#- name: Wait for elasticsearch to be available 
+#  local_action: 
+#    module: wait_for 
+#      host="{{item.instances[0].public_ip}}"
+#      port=9300
+#      delay=5
+#      timeout=300
+#  with_items: "{{ec2_details.results}}"
+#  sudo: false
     
+    
+- name: sleep for service to start
+  pause: seconds=15
+  

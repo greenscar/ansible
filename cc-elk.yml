@@ -16,14 +16,14 @@
     - {role: ec2_cloudformation}
     - {role: ec2_security_group}
     - {role: ec2_instances}
+    
    
-      
+   
 - name: Deploy elasticsearch
   hosts: elasticsearch_servers
   user: ec2-user
   sudo: yes
-  gather_facts: true
-  
+  gather_facts: true  
   vars:
     ec2_details: "{{hostvars.localhost.ec2_details}}"
   vars_files:
@@ -31,23 +31,9 @@
     - ./group_vars/elasticsearch.yml
   roles:
     - {role: elasticsearch}
-    
-    
-- name: Create Load Balancer & put elasticsearch instances in it.
-  hosts: localhost
-  connection: local
-  gather_facts: False
-  
-  vars:
-    deploy_group_name: elasticsearch
-  vars_files:
-    - ./group_vars/all.yml
-    - ./group_vars/elasticsearch.yml
-  roles:
-    - {role: ec2_cloudformation}
-    - {role: ec2_security_group}
-    - {role: ec2_load_balancer}
+       
    
+    
 ########################################################
 # LOGSTASH
 ########################################################
@@ -58,7 +44,9 @@
   gather_facts: False
   vars:
     deploy_group_name: logstash_servers
-    elasticsearch_elb: "{{hostvars.localhost.elb_info.elb.dns_name}}"
+    #elasticsearch_ip: "{{elasticsearch_servers}}"
+    ec2_details: "{{hostvars.localhost.ec2_details}}"
+    elasticsearch_ip_address: "{{groups.elasticsearch_servers[0]}}"
   vars_files:
     - ./group_vars/all.yml
     - ./group_vars/logstash.yml
@@ -75,13 +63,16 @@
   gather_facts: true
   
   vars:
+    #elasticsearch_ip: "{{elasticsearch_servers}}"
     ec2_details: "{{hostvars.localhost.ec2_details}}"
-    elasticsearch_elb: "{{hostvars.localhost.elb_info.elb.dns_name}}"
+    elasticsearch_ip_address: "{{groups.elasticsearch_servers[0]}}"
   vars_files:
     - ./group_vars/all.yml
     - ./group_vars/logstash.yml
   roles:
+    - {role: ec2_cloudformation}
     - {role: logstash}
+    
     
 ########################################################
 # KIBANA
@@ -92,7 +83,9 @@
   gather_facts: False
   vars:
     deploy_group_name: kibana_servers
-    elasticsearch_dns_name: "{{hostvars.localhost.elb_info.elb.dns_name}}"
+    ec2_details: "{{hostvars.localhost.ec2_details}}"
+    elasticsearch_ip_address: "{{groups.elasticsearch_servers[0]}}"
+    
   vars_files:
     - ./group_vars/all.yml
     - ./group_vars/kibana.yml
@@ -101,7 +94,22 @@
     - {role: ec2_security_group}
     - {role: ec2_instances}
    
+   
     
+- name: Download Kibana tar
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+    deploy_group_name: kibana_servers
+    ec2_details: "{{hostvars.localhost.ec2_details}}"
+    elasticsearch_ip_address: "{{groups.elasticsearch_servers[0]}}"
+  vars_files:
+    - ./group_vars/all.yml
+    - ./group_vars/kibana.yml
+  roles:
+    - {role: download_resource}
+
 - name: Deploy kibana
   hosts: kibana_servers
   user: ec2-user
@@ -109,8 +117,9 @@
   gather_facts: true
   
   vars:
+    deploy_group_name: kibana_servers
     ec2_details: "{{hostvars.localhost.ec2_details}}"
-    elasticsearch_elb: "{{hostvars.localhost.elb_info.elb.dns_name}}"
+    elasticsearch_ip_address: "{{groups.elasticsearch_servers[0]}}"
   vars_files:
     - ./group_vars/all.yml
     - ./group_vars/kibana.yml

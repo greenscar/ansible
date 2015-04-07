@@ -28,9 +28,8 @@ instance:
    security_group: "{{security_group.name}}"
    wait_timeout: "500"
    size: "t1.micro"
-# "us-east-1"
-   region: "us-west-2"
-   ami: "ami-ff527ecf" #"ami-8e682ce6"
+   region: "us-east-1"
+   ami: "ami-8e682ce6"
    count: 1
    public_ip: "yes"
    tags:

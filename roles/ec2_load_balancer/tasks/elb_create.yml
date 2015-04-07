@@ -1,29 +1,37 @@
-
+- name: debug
+  debug: msg="{{ec2_group_info.group_id}}"
 ####################
 # Create the elb
+# This needs modified so I don't have PrivateSubnet1 & PrivateSubnet2 hard coded.
+# There should be some sort of loop that does this.
 ####################
 - name: create elb
   ec2_elb_lb:
     name: "{{ elb.name }}"
     state: present
     region: "{{instance.region}}"
-    zones: "{{ elb.zones }}"
+#    zones: "{{ elb.zones }}"
     listeners: "{{ elb.listeners }}"
+    security_group_ids: "{{ec2_group_info.group_id}}"
+    cross_az_load_balancing: "{{elb.cross_az_load_balancing}}"
+    subnets: "{{ ec2_cloudformation_results['PrivateSubnet1'] }},{{ ec2_cloudformation_results['PrivateSubnet2']}}"
+# ,{{ ec2_cloudformation_results['PrivateSubnet2']}}
+#    vpc_subnet_id: "{{ec2_cloudformation_results[item]}}"
     health_check: "{{ elb.health_check }}"
   register: elb_info
   
 - set_fact: 
-    elb_info.elb.dns_name: "{{elb_info.elb.dns_name}}"
+    elasticsearch_ip_address: "{{elb_info.elb.dns_name}}"
   
-- name: log elb_info
-  debug: msg="{{elb_info}}"
+#- name: log elb_info
+#  debug: msg="{{elb_info}}"
   
   
-- name: log elb_info.elb
-  debug: msg="{{elb_info.elb}}"
+#- name: log elb_info.elb
+#  debug: msg="{{elb_info.elb}}"
   
-- name: log elb_info.elb.name
-  debug: msg="{{elb_info.elb.name}}"
+#- name: log elb_info.elb.name
+#  debug: msg="{{elb_info.elb.name}}"
   
-- name: log elb_info.elb.dns_name
-  debug: msg="{{elb_info.elb.dns_name}}"
+#- name: log elb_info.elb.dns_name
+#  debug: msg="{{elb_info.elb.dns_name}}"

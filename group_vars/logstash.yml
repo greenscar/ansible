@@ -1,6 +1,6 @@
 security_group:
-   name: "DEV-logstash"
-   description: "logstash server"
+   name: "ELK-logstash"
+   description: "ELK logstash server"
    rules:
       - cidr_ip: "0.0.0.0/0"
         from_port: "9200"
@@ -10,6 +10,10 @@ security_group:
         from_port: "9300"
         proto: "tcp"
         to_port: "9300"
+      - cidr_ip: "0.0.0.0/0"
+        from_port: "4560"
+        proto: "tcp"
+        to_port: "4560"
       - cidr_ip: "0.0.0.0/0"
         from_port: "22"
         proto: "tcp"
@@ -34,23 +38,27 @@ security_group:
         from_port: "9300"
         proto: "tcp"
         to_port: "9300" # logstash
+      - cidr_ip: "0.0.0.0/0"
+        from_port: "9200"
+        proto: "tcp"
+        to_port: "9200" # logstash
 
 file_name: "logstash-1.4.2-1_2c0f5a1.noarch.rpm"
 package_url: "https://download.elasticsearch.org/logstash/logstash/packages/centos/{{file_name}}"
 install_dir: "/usr/share/logstash/"
 log_dir: "/var/log/logstash"
-cluster_name: "elk-logstash"
+cluster_name: "INT-ELK-logstash"
 instance:
    security_group: "{{security_group.name}}"
    wait_timeout: "500"
    size: "m1.small"
-# "us-east-1"
-   region: "us-west-2"
-   ami: "ami-ff527ecf" #"ami-8e682ce6"
+   region: "us-east-1"
+   ami: "ami-8e682ce6"
    count: 1
    public_ip: "no"
    tags:
-       Name: "DEV-logstash"
+     Name: "ELK-logstash"
+     CCEnvironment: "Integration"
    subnets: 
      - "PrivateSubnet1"
 #     - "PrivateSubnet2"

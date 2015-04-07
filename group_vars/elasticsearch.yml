@@ -1,6 +1,6 @@
 security_group:
-   name: "DEV-elasticsearch"
-   description: "elasticsearch server"
+   name: "ELK-elasticsearch"
+   description: "ELK elasticsearch server"
    rules:
       - cidr_ip: "0.0.0.0/0"
         from_port: "9200"
@@ -36,10 +36,14 @@ security_group:
         to_port: "9300" # elasticsearch
 
 elb:
-   name: "DEV-elasticsearch"
+   name: "ELK-elasticsearch"
    zones:
-      - "us-west-2a"
-      - "us-west-2b"
+      - "us-east-1a"
+      - "us-east-1b"
+   subnets: 
+     - "PrivateSubnet1"
+     - "PrivateSubnet2"
+   cross_az_load_balancing: "yes"
    listeners:
       - protocol: tcp # options are http, https, ssl, tcp
         load_balancer_port: 9300
@@ -60,21 +64,18 @@ file_name: "elasticsearch-1.4.4.noarch.rpm"
 package_url: "https://download.elasticsearch.org/elasticsearch/elasticsearch/{{file_name}}"
 install_dir: "/usr/share/elasticsearch/"
 log_dir: "/var/log/elasticsearch"
-cluster_name: "elk-elasticsearch"
+cluster_name: "INT-ELK-elasticsearch"
 instance:
    security_group: "{{security_group.name}}"
    wait_timeout: "500"
    size: "m1.small"
-# "us-east-1"
-   region: "us-west-2"
-#   zones:
-#      - "us-west-2a"
-#      - "us-west-2b"
-   ami: "ami-ff527ecf" #"ami-8e682ce6"
+   region: "us-east-1"
+   ami: "ami-8e682ce6"
    count: 1
-   public_ip: "yes" #"no"
+   public_ip: "no"
    tags:
-       Name: "DEV-elasticsearch"
+     CCEnvironment: "Integration"
+     Name: "ELK-elasticsearch"
    subnets: 
      - "PrivateSubnet1"
 #     - "PrivateSubnet2"

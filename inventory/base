@@ -1,14 +1,25 @@
 [local]
-localhost
+localhost #ansible_ssh_private_key_file=~/.ssh/bravo-infra.pem
 
 
 # The EC2 plugin will populate these groups, but we need to add empty entries
 # here to make aliases for them below.
-[ansible-master]
-[tag_ansible-master]
+#[ansible-master]
+#[tag_ansible-master]
+
+[BastionHost]
+[tag_BastionHost]
 
 [master:children]
-ansible-master
+BastionHost 
+
+[BastionHost:children]
+tag_BastionHost
+
+
+
+#[master:children]
+#ansible-master
 
 #[ansible-master:children]
-tag_ansible-master
+#tag_ansible-master

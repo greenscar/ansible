@@ -1,6 +1,6 @@
 security_group:
-   name: "DEV-kibana"
-   description: "kibana server"
+   name: "ELK-kibana"
+   description: "ELK kibana server"
    rules:
       - cidr_ip: "0.0.0.0/0"
         from_port: "5601"
@@ -33,23 +33,23 @@ security_group:
 
 file_name: "kibana-4.0.1-linux-x64.tar.gz"
 package_url: "https://download.elasticsearch.org/kibana/kibana/{{file_name}}"
-install_dir: "/usr/share/kibana/"
-install_subdir: " kibana-4.0.1-linux-x64"
-log_dir: "/var/log/kibana"
-cluster_name: "elk-kibana"
+install_dir: "/usr/share/kibana4/"
+install_subdir: "kibana-4.0.1-linux-x64"
+log_dir: "/var/log/kibana4"
+cluster_name: "INT-ELK-kibana"
 instance:
    security_group: "{{security_group.name}}"
    wait_timeout: "500"
-   size: "m1.small"
-# "us-east-1"
-   region: "us-west-2"
-   ami: "ami-ff527ecf" #"ami-8e682ce6"
+   size: "t1.micro"
+   region: "us-east-1"
+   ami: "ami-8e682ce6"
    count: 1
-   public_ip: "no"
+   public_ip: "yes"
    tags:
-       Name: "DEV-kibana"
+     CCEnvironment: "Integration"
+     Name: "ELK-kibana"
    subnets: 
-     - "PrivateSubnet1"
+     - "PublicSubnet1"
 #     - "PrivateSubnet2"
    volumes:
      - device_name: /dev/sda1
